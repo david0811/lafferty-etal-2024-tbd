@@ -7,15 +7,6 @@ import time
 import numpy as np
 import pandas as pd
 
-import json
-import os
-import shutil
-import subprocess
-import time
-
-import numpy as np
-import pandas as pd
-
 def run_WBM(
     run_type,
     main_path,
@@ -130,7 +121,7 @@ def run_WBM(
     wbm_init["Spinup"]["End"] = spinup_end
     wbm_init["Spinup"]["Loops"] = spinup_loops
 
-    wbm_init["Network"] = network
+    wbm_init["Network"] = "/gpfs/group/kaf26/default/private/WBM_data/squam.sr.unh.edu/US_CDL_v3_data/network/flowdirection206_us.asc"
     
     # Output variables
     wbm_init['Output_vars'] =  '\n '.join(output_vars)
