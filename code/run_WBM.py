@@ -19,7 +19,6 @@ def run_WBM(
     spinup_loops,
     output_vars,
     model_info,
-    network,
     pet_method,
     airT_primary,
     airT_secondary,
@@ -41,6 +40,7 @@ def run_WBM(
     crop_area_frac_patch,
     crop_par,
     crop_par_patch,
+    pre_spooled,
 ):
     """
     Inputs:
@@ -55,10 +55,9 @@ def run_WBM(
         spinup_loops: number of spinup loops (int)
         output_vars: list of output vars (list of str)
         model_info: list of climate model information, only used for run_type = "model" (dict)
-        network: path to network file (str)
         pet_method: PET method ("Hamon" or "Penmann-Monteith")
-        airT_primary: name of primary airT init file (str)
-        airT_secondary: name of patch airT init file (str)
+        airT_primary: name of primary airT init file, use "XXX" if need to use max/min instead (str)
+        airT_secondary: name of patch airT init file, use "XXX" if need to use max/min instead (str)
         airT_min: name of primary airTmin init file (str)
         airT_max: name of primary airTmax init file (str)
         precip_primary: name of primary precip init file (str)
@@ -77,6 +76,7 @@ def run_WBM(
         crop_area_frac_patch: name of patch crop area fraction timeseries init file (str)
         crop_par: name of crop parameter file (str)
         crop_par_patch: name of patch crop parameter file (str)
+        pre_spooled: whether non-climate inputs have been pre-spooled (binary)
     
     Outputs:
         This function copies a blank WBM simulation directory template, updates the init files based on function
@@ -122,7 +122,7 @@ def run_WBM(
     wbm_init["Spinup"]["Loops"] = spinup_loops
 
     wbm_init["Network"] = "/gpfs/group/kaf26/default/private/WBM_data/squam.sr.unh.edu/US_CDL_v3_data/network/flowdirection206_us.asc"
-    
+
     # Output variables
     wbm_init['Output_vars'] =  '\n '.join(output_vars)
 
@@ -176,7 +176,7 @@ def run_WBM(
                     continue
                 f.write(subkey + " => '" + str(wbm_init[key][subkey]) + "',\n")
             f.write("},\n")
-        # Regalar keys
+        # Regular keys
         else:
             # Skip writing if entry = XXX
             if str(wbm_init[key])[-3:] == "XXX":
@@ -210,6 +210,8 @@ def run_WBM(
                         newline = newline.replace("xMEMBERx", model_info["member"])
                     if "grid" in model_info.keys():
                         newline = newline.replace("xGRIDx", model_info["grid"])
+                    if "method" in model_info.keys():
+                        newline = newline.replace("xMETHODx", model_info["method"])
                     newlines.append(newline)
             # Write new init file
             with open(f"{sim_path}/data_init/{model_info['ensemble']}_{var}_daily.init", "w") as f:
@@ -259,6 +261,24 @@ def run_WBM(
     if check_job_out != "All Done!":
         print("Something went wrong!")
         return None
+    
+    ######### Spool only climate drivers
+    if pre_spooled:
+        spool_submit = "spool_WBM.pbs"
+        run_submit = "run_WBM.pbs"
+        
+        with open(f"{sim_path}/wbm_output/build_spool_batch.pl", "r") as f:
+            newlines = []
+            for line in f.readlines():      
+                if "CDL-US-M" not in line:
+                    newlines.append(line)
+                
+        with open(f"{sim_path}/wbm_output/build_spool_batch.pl", "w") as f:
+            for line in newlines:
+                f.writelines(line)
+    else:
+        spool_submit = "spool_WBM_no_prespool.pbs"
+        run_submit = "run_WBM_no_prespool.pbs"
 
     ####### Spool and run
     args = "sim_dir=" + sim_ID
@@ -278,14 +298,14 @@ def run_WBM(
         else:
             os.remove(f"{sim_path}/spool_WBM.out")
             spool_jobid = subprocess.run(
-                ["qsub", "-v", args, "-o", out, f"{sim_path}/spool_WBM.pbs"],
+                ["qsub", "-v", args, "-o", out, f"{sim_path}/{spool_submit}"],
                 capture_output=True,
                 text=True,
             ).stdout.split(".")[0]
             print("spool jobid: " + spool_jobid)
     else:
         spool_jobid = subprocess.run(
-            ["qsub", "-v", args, "-o", out, f"{sim_path}/spool_WBM.pbs"],
+            ["qsub", "-v", args, "-o", out, f"{sim_path}/{spool_submit}"],
             capture_output=True,
             text=True,
         ).stdout.split(".")[0]
@@ -297,14 +317,14 @@ def run_WBM(
 
     if spooling_complete:
         run_jobid = subprocess.run(
-            ["qsub", "-v", args, "-o", out, f"{sim_path}/run_WBM.pbs"],
+            ["qsub", "-v", args, "-o", out, f"{sim_path}/{run_submit}"],
             capture_output=True,
             text=True,
         ).stdout.split(".")[0]
         print("run jobid: " + run_jobid)
     else:
         run_jobid = subprocess.run(
-            ["qsub", "-W", "depend=afterok:" + spool_jobid, "-v", args, "-o", out, f"{sim_path}/run_WBM.pbs"],
+            ["qsub", "-W", "depend=afterok:" + spool_jobid, "-v", args, "-o", out, f"{sim_path}/{run_submit}"],
             capture_output=True,
             text=True,
         ).stdout.split(".")[0]
