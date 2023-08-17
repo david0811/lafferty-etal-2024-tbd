@@ -1,0 +1,17 @@
+{
+Code_Name	=> 'LOCA2_tasmin_daily',
+Time_Series	=> 'daily',
+Start_Date	=> 'xSTART_DATEx',
+End_Date	=> 'xEND_DATEx',
+Name		=> 'LOCA2, North America ~6km, Tasmin, Daily',
+Var_Name	=> 'tasmin',
+Units	    => 'C',
+Var_Scale	=> 1,
+Var_Offset	=> -273.15,
+Orig_Units	=> 'K',
+Bands		=> 23741,
+Processing	=> '',
+Projection	=> 'epsg:4326',
+File_Path	=> '/gpfs/group/kaf26/default/public/LOCA2/xMODELx/0p0625deg/xMEMBERx/xSSPx/tasmin/tasmin.xMODELx.xSSPx.xMEMBERx.1950-2014.LOCA_16thdeg_v20220413.nc',
+Comment		=> 'https://loca.ucsd.edu/'
+}

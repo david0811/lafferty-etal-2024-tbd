@@ -1,0 +1,17 @@
+{
+Code_Name	=> 'LOCA2_pr_daily',
+Time_Series	=> 'daily',
+Start_Date	=> 'xSTART_DATEx',
+End_Date	=> 'xEND_DATEx',
+Name		=> 'LOCA2, North America ~6km, Precipitation, Daily',
+Var_Name	=> 'pr',
+Units	    => 'mm/day',
+Var_Scale	=> 86400,
+Var_Offset	=> 0,
+Orig_Units	=> 'kg m-2 s-1',
+Bands		=> 23741,
+Processing	=> '',
+Projection	=> 'epsg:4326',
+File_Path	=> '/gpfs/group/kaf26/default/public/LOCA2/xMODELx/0p0625deg/xMEMBERx/xSSPx/pr/pr.xMODELx.xSSPx.xMEMBERx.1950-2014.LOCA_16thdeg_v20220519.nc',
+Comment		=> 'https://loca.ucsd.edu/'
+}

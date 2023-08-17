@@ -1,0 +1,17 @@
+{
+Code_Name	=> 'OakRidge_tmin_daily',
+Time_Series	=> 'daily',
+Start_Date	=> '1980-01-01',
+End_Date	=> '2059-12-31',
+Name		=> 'OakRidge, North America ~4km, Minimum Temperature, Daily',
+Var_Name	=> 'tmin',
+Units	    => 'C',
+Var_Scale	=> 1,
+Var_Offset	=> 0,
+Orig_Units	=> 'C',
+Bands		=> 366,
+Processing	=> '',
+Projection	=> 'epsg:4326',
+File_Path	=> '/gpfs/group/kaf26/default/public/OakRidgeCMIP6/xMODELx_ssp585_xMEMBERx_xMETHODx_VIC4_tmin__YEAR_.nc',
+Comment		=> 'https://hydrosource.ornl.gov/dataset/9505V3'
+}
