@@ -12,6 +12,8 @@ def run_WBM(
     main_path,
     sim_ID,
     project_ID,
+    perform_spool,
+    perform_run,
     run_start,
     run_end,
     spinup_start,
@@ -40,7 +42,6 @@ def run_WBM(
     crop_area_frac_patch,
     crop_par,
     crop_par_patch,
-    pre_spooled,
 ):
     """
     Inputs:
@@ -48,6 +49,8 @@ def run_WBM(
         main_path: complete path to main folder for all results (str)
         sim_ID: path to simulation folder relative to main path (str)
         project_ID: project identifier (str)
+        perform_spool: whether to perform spooling (bool)
+        perform_run: whether to perform the actual run (bool)
         run_start: date of run start (str)
         run_end: date of run end (str)
         spinup_start: date of spinup start (str)
@@ -76,7 +79,6 @@ def run_WBM(
         crop_area_frac_patch: name of patch crop area fraction timeseries init file (str)
         crop_par: name of crop parameter file (str)
         crop_par_patch: name of patch crop parameter file (str)
-        pre_spooled: whether non-climate inputs have been pre-spooled (binary)
     
     Outputs:
         This function copies a blank WBM simulation directory template, updates the init files based on function
@@ -90,9 +92,9 @@ def run_WBM(
         else:
             return f"{sim_path}/data_init/{par}"
 
-    #################
-    # Set up folders
-    #################
+    ###############################
+    # Set up simulation folder
+    ###############################
     sim_path = main_path + sim_ID
 
     if os.path.isdir(sim_path):
@@ -116,6 +118,7 @@ def run_WBM(
     wbm_init["MT_Code_Name"]["Output_dir"] = f"{sim_path}/wbm_output"
     wbm_init["MT_Code_Name"]["Run_Start"] = run_start
     wbm_init["MT_Code_Name"]["Run_End"] = run_end
+    #wbm_init["MT_Code_Name"]["spool_dir"] = spool_dir
 
     wbm_init["Spinup"]["Start"] = spinup_start
     wbm_init["Spinup"]["End"] = spinup_end
@@ -202,6 +205,7 @@ def run_WBM(
                 newlines = []
                 for line in f.readlines():      
                     newline = line
+                    newline = newline.replace("xCODE_NAMEx", f"{sim_ID}_{var}_daily")
                     newline = newline.replace("xMODELx", model_info["model"])
                     newline = newline.replace("xSSPx", model_info["ssp"])
                     newline = newline.replace("xSTART_DATEx", run_start)
@@ -214,10 +218,50 @@ def run_WBM(
                         newline = newline.replace("xMETHODx", model_info["method"])
                     newlines.append(newline)
             # Write new init file
-            with open(f"{sim_path}/data_init/{model_info['ensemble']}_{var}_daily.init", "w") as f:
+            with open(f"{sim_path}/data_init/{sim_ID}_{var}_daily.init", "w") as f:
                 for line in newlines:
                     f.writelines(line)
-
+                    
+    ##############################
+    # Update rsync include file 
+    ##############################
+    crop_files = ["CDL-US-M_fallow_fr",
+                  "CDL-US-M_rice_irr_awCap_av",
+                  "CDL-US-M_rice_irr_CDF_av",
+                  "CDL-US-M_rice_irr_fr_av",
+                  "CDL-US-M_rice_irr_Kc_av",
+                  "CDL-US-M_rice_irr_AddedWater_av",
+                  "CDL-US-M_nonrice_irr_awCap_av",
+                  "CDL-US-M_nonrice_irr_CDF_av",
+                  "CDL-US-M_nonrice_irr_fr_av",
+                  "CDL-US-M_nonrice_irr_Kc_av",
+                  "CDL-US-M_rfd_awCap_av",
+                  "CDL-US-M_rfd_fr_av",
+                  "CDL-US-M_rfd_Kc_av",
+                  "cdl_cropland"]
+    
+    if run_type == "model" and model_info["ssp"][:3] == "ssp":
+        crop_app = "proj"
+    else:
+        crop_app = "hist"
+    
+    with open(f"{sim_path}/rsync_include.txt", "w") as f:
+        f.writelines("+ /flowdirection206_us/merra2_lai_dc/** \n")
+        f.writelines("+ /flowdirection206_us/merra2_lai_dc_MinMax/** \n")
+        
+        if airT_primary == "XXX":
+            f.writelines(f"+ /flowdirection206_us/{airT_min[:-5]}/** \n")
+            f.writelines(f"+ /flowdirection206_us/{airT_max[:-5]}/** \n")
+        else:
+            f.writelines(f"+ /flowdirection206_us/{airT_primary[:-5]}/** \n")
+        
+        f.writelines(f"+ /flowdirection206_us/{precip_primary[:-5]}/** \n")
+        
+        for line in crop_files:
+            f.writelines(f"+ /flowdirection206_us/{line}_{crop_app}/** \n")
+            
+        f.writelines("- **")
+    
     ################
     # Run jobs
     ################
@@ -263,22 +307,15 @@ def run_WBM(
         return None
     
     ######### Spool only climate drivers
-    if pre_spooled:
-        spool_submit = "spool_WBM.pbs"
-        run_submit = "run_WBM.pbs"
-        
-        with open(f"{sim_path}/wbm_output/build_spool_batch.pl", "r") as f:
-            newlines = []
-            for line in f.readlines():      
-                if "CDL-US-M" not in line:
-                    newlines.append(line)
+    with open(f"{sim_path}/wbm_output/build_spool_batch.pl", "r") as f:
+        newlines = []
+        for line in f.readlines():      
+            if "CDL-US-M" not in line and "merra2" not in line:
+                newlines.append(line)
                 
-        with open(f"{sim_path}/wbm_output/build_spool_batch.pl", "w") as f:
-            for line in newlines:
-                f.writelines(line)
-    else:
-        spool_submit = "spool_WBM_no_prespool.pbs"
-        run_submit = "run_WBM_no_prespool.pbs"
+    with open(f"{sim_path}/wbm_output/build_spool_batch.pl", "w") as f:
+        for line in newlines:
+            f.writelines(line)
 
     ####### Spool and run
     args = "sim_dir=" + sim_ID
@@ -287,45 +324,61 @@ def run_WBM(
     # check if spooling already done
     spooling_complete = False
     if os.path.isfile(f"{sim_path}/spool_WBM.out"):
-        check_job_out = subprocess.run(
+        check_spool_out = subprocess.run(
             ["tail", "-n", "5", f"{sim_path}/spool_WBM.out"],
             capture_output=True,
             text=True,
         ).stdout.split("\n")[-4]
-        if check_job_out == "All Done!":
+        if check_spool_out == "All Done!":
             print("Spooling already completed.")
             spooling_complete = True
         else:
-            os.remove(f"{sim_path}/spool_WBM.out")
-            spool_jobid = subprocess.run(
-                ["qsub", "-v", args, "-o", out, f"{sim_path}/{spool_submit}"],
-                capture_output=True,
-                text=True,
-            ).stdout.split(".")[0]
-            print("spool jobid: " + spool_jobid)
+            if perform_spool:
+                os.remove(f"{sim_path}/spool_WBM.out")
+                spool_jobid = subprocess.run(
+                    ["qsub", "-v", args, "-o", out, f"{sim_path}/spool_WBM.pbs"],
+                    capture_output=True, text=True,
+                    ).stdout.split(".")[0]
+                print("spool jobid: " + spool_jobid)
     else:
-        spool_jobid = subprocess.run(
-            ["qsub", "-v", args, "-o", out, f"{sim_path}/{spool_submit}"],
-            capture_output=True,
-            text=True,
-        ).stdout.split(".")[0]
-        print("spool jobid: " + spool_jobid)
+        if perform_spool:
+            spool_jobid = subprocess.run(
+                ["qsub", "-v", args, "-o", out, f"{sim_path}/spool_WBM.pbs"],
+                capture_output=True, text=True,
+                ).stdout.split(".")[0]
+            print("spool jobid: " + spool_jobid)
 
     ########## Run WBM (when spooling is complete)
     args = f"sim_dir={sim_ID}"
     out = f"{sim_path}/run_WBM.out"
-
-    if spooling_complete:
-        run_jobid = subprocess.run(
-            ["qsub", "-v", args, "-o", out, f"{sim_path}/{run_submit}"],
-            capture_output=True,
-            text=True,
-        ).stdout.split(".")[0]
-        print("run jobid: " + run_jobid)
-    else:
-        run_jobid = subprocess.run(
-            ["qsub", "-W", "depend=afterok:" + spool_jobid, "-v", args, "-o", out, f"{sim_path}/{run_submit}"],
-            capture_output=True,
-            text=True,
-        ).stdout.split(".")[0]
-        print("run jobid: " + run_jobid)
+    # Check if run already complete
+    if perform_run:
+        run_complete = False
+        if os.path.isfile(out):
+            check_job_out = subprocess.run(
+                ["tail", "-n", "100", out],
+                capture_output=True, text=True,
+            ).stdout.split("\n")
+            if len(check_job_out) < 100:
+                pass
+            else:
+                check_message = "* INFO: WBM model runs completed with exit code"
+                check_job_out = [line for line in job_output if line[:len(check_message)] == check_message][0][-1] == "0"
+                if check_job_out:
+                    print("Run already completed.")
+                    run_complete = True
+        if not run_complete:
+            if spooling_complete:
+                run_jobid = subprocess.run(
+                     ["qsub", "-v", args, "-o", out, f"{sim_path}/run_WBM.pbs"],
+                     capture_output=True,
+                     text=True,
+                 ).stdout.split(".")[0]
+                print("run jobid: " + run_jobid)
+            else:
+                run_jobid = subprocess.run(
+                     ["qsub", "-W", "depend=afterok:" + spool_jobid, "-v", args, "-o", out, f"{sim_path}/run_WBM.pbs"],
+                     capture_output=True,
+                     text=True,
+                ).stdout.split(".")[0]
+                print("run jobid: " + run_jobid)
