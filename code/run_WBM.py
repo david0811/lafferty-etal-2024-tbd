@@ -138,7 +138,7 @@ def run_WBM(
     wbm_init["MT_airT"]["airTmin"] = data_init_path(airT_min)
     wbm_init["MT_airT"]["airTmax"] = data_init_path(airT_max)
 
-    wbm_init["MT_Precip"]["Primary"] = f"{sim_path}/data_init/{precip_primary}"
+    wbm_init["MT_Precip"]["Primary"] = data_init_path(precip_primary)
     wbm_init["MT_Precip"]["Secondary"] = data_init_path(precip_secondary)
 
     wbm_init["MT_windU"]["Primary"] = data_init_path(windU_primary)
@@ -146,11 +146,11 @@ def run_WBM(
     wbm_init["MT_humidity"]["Primary"] = data_init_path(humidity_primary)
     wbm_init["MT_albedo"]["Primary"] = data_init_path(albedo_primary)
 
-    wbm_init["MT_cloudFr"]["Primary"] = f"{sim_path}/data_init/{cloudFr_primary}"
+    wbm_init["MT_cloudFr"]["Primary"] = data_init_path(cloudFr_primary)
     
     # Soil
-    wbm_init["rootingDepth"] = f"{sim_path}/data_init/{rootingDepth}"
-    wbm_init["soilAWCapacity"] = soilAWC
+    wbm_init["rootingDepth"] = data_init_path(rootingDepth)
+    wbm_init["soilAWCapacity"] = data_init_path(soilAWC)
     
     # Canopy
     wbm_init["canopyHt"] = canopyHt
@@ -160,7 +160,7 @@ def run_WBM(
 
     wbm_init["landCollapse"] = land_collapse
 
-    wbm_init["Irrigation"]["CropAreaFrac"] = f"{sim_path}/data_init/{crop_area_frac}"
+    wbm_init["Irrigation"]["CropAreaFrac"] = data_init_path(crop_area_frac)
     wbm_init["Irrigation"]["CropAreaFracPatch"] = data_init_path(crop_area_frac_patch)
 
     wbm_init["Irrigation"]["CropParFile"] = f"{sim_path}/data/{crop_par}"
@@ -363,8 +363,8 @@ def run_WBM(
                 pass
             else:
                 check_message = "* INFO: WBM model runs completed with exit code"
-                check_job_out = [line for line in job_output if line[:len(check_message)] == check_message][0][-1] == "0"
-                if check_job_out:
+                check_job_out = [line for line in check_job_out if check_message in line]
+                if len(check_job_out) > 0 and check_job_out[0][-1] == "0":
                     print("Run already completed.")
                     run_complete = True
         if not run_complete:
