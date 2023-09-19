@@ -20,7 +20,7 @@ for model in nex_models:
         member = os.listdir(f"{nex_path}/{model}/{ssp}/tas/")[0].split("_")[-3]
         grid = os.listdir(f"{nex_path}/{model}/{ssp}/tas/")[0].split("_")[-2]
         # Append
-        run_info.append({"ensemble":ensemble, "model": model, "member": member, "grid": grid, "ssp":ssp, "method":0})
+        run_info.append({"ensemble":ensemble, "model": model, "member": member, "grid": grid, "ssp":ssp, "method":ensemble})
     
 # LOCA2
 loca_path = "/gpfs/group/kaf26/default/public/LOCA2"
@@ -37,7 +37,7 @@ for model in loca_models:
         ssps = os.listdir(f"{loca_path}/{model}/0p0625deg/{member}")
         # Append
         for ssp in ssps:
-            run_info.append({"ensemble":ensemble, "model": model, "member": member, "ssp":ssp, "grid":0, "method":0})
+            run_info.append({"ensemble":ensemble, "model": model, "member": member, "ssp":ssp, "grid":0, "method":ensemble})
             
 # OakRidge (manual)
 ensemble = "OakRidge"
@@ -61,8 +61,29 @@ for method in methods:
             info_tmp["ssp"] = ssp
             run_info.append(info_tmp)
         
+        
+# Dataframe 
+df = pd.DataFrame(run_info)
+
+#############
+# Skip some #
+#############
+# Missing temperature data
+drop = df[(df.ensemble == "LOCA2") & 
+          (df.ssp == "ssp585") & 
+          (df.model == "MPI-ESM1-2-LR") &
+          (df.member.isin(["r4i1p1f1", "r5i1p1f1", "r6i1p1f1", "r7i1p1f1", "r8i1p1f1", "r10i1p1f1"]))].index
+
+df = df.drop(drop)
+
+# Only contains tas
+drop = df[(df.ensemble == "NEX-GDDP") & 
+          (df.model == "CMCC-CM2-SR5") &
+          (df.ssp.isin(["ssp126", "ssp370"]))].index
+
+df = df.drop(drop)
+        
 #########
 # Store #
 #########
-df = pd.DataFrame(run_info)
 df.to_csv("./climate_drivers.csv", index=False)

@@ -216,13 +216,22 @@ def run_WBM(
                 for line in f.readlines():      
                     newline = line
                     newline = newline.replace("xCODE_NAMEx", f"{sim_ID}_{var}_daily")
-                    newline = newline.replace("xMODELx", run_info["model"])
                     newline = newline.replace("xSSPx", run_info["ssp"])
                     newline = newline.replace("xSTART_DATEx", run_start)
                     newline = newline.replace("xEND_DATEx", run_end)
                     newline = newline.replace("xMEMBERx", run_info["member"])
                     newline = newline.replace("xGRIDx", run_info["grid"])
                     newline = newline.replace("xMETHODx", run_info["method"])
+                    # annoying difference for one NEX model
+                    if run_info['model'] == "GFDL-CM4_gr2": 
+                        newline = newline.replace("_xMODELx_", "_GFDL-CM4_")
+                    else:
+                        newline = newline.replace("xMODELx", run_info["model"])
+                    # some NEX-GDDP models have 360 day calendar    
+                    if (run_info['ensemble'] == "NEX-GDDP") and \
+                    (run_info['model'] in ["HadGEM3-GC31-LL","HadGEM3-GC31-MM","KACE-1-0-G","UKESM1-0-LL"]):
+                        newline = newline.replace("=> 365", "=> 360")
+                    # Append new lines
                     newlines.append(newline)
             # Write new init file
             with open(f"{sim_path}/data_init/{sim_ID}_{var}_daily.init", "w") as f:
@@ -287,7 +296,7 @@ def run_WBM(
         while not os.path.isfile(f"{sim_path}/check_run_WBM.out"):
             time.sleep(60)
             check_time += 1
-            if check_time > 20:
+            if check_time > 5:
                 print("Something went wrong!")
                 return None
         check_job_out = subprocess.run(
