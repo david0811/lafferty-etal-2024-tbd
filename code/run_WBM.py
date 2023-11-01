@@ -14,6 +14,7 @@ def run_WBM(
     project_ID,
     run_start,
     run_end,
+    calendar,
     spinup_start,
     spinup_end,
     spinup_loops,
@@ -119,6 +120,7 @@ def run_WBM(
     wbm_init["MT_Code_Name"]["Output_dir"] = f"{sim_path}/wbm_output"
     wbm_init["MT_Code_Name"]["Run_Start"] = run_start
     wbm_init["MT_Code_Name"]["Run_End"] = run_end
+    wbm_init["MT_Code_Name"]["Calendar"] = calendar
     #wbm_init["MT_Code_Name"]["spool_dir"] = spool_dir
 
     wbm_init["Spinup"]["Start"] = spinup_start
@@ -225,6 +227,7 @@ def run_WBM(
                     # annoying difference for one NEX model
                     if run_info['model'] == "GFDL-CM4_gr2": 
                         newline = newline.replace("_xMODELx_", "_GFDL-CM4_")
+                        newline = newline.replace("xMODELx", "GFDL-CM4_gr2")
                     else:
                         newline = newline.replace("xMODELx", run_info["model"])
                     # some NEX-GDDP models have 360 day calendar    
