@@ -13,7 +13,7 @@ def update_state(state, forcing, params):
     Ws_prev, Wi, Sp = state
 
     # Retrieve parameter values
-    Ts, Tm, Clai, wiltingp, alpha, betaHBV, Wcap, phi = params
+    wiltingp, alpha, betaHBV, Wcap, phi = params
 
     # Retrieve forcing
     tas, prcp, lai, Kpet, doy = forcing
@@ -62,7 +62,7 @@ def update_state(state, forcing, params):
     ################
     # Precipitation is assumed to be entirely snow/rain
     # if temperature is below/above threshold (Ts)
-    is_snowfall = tas < Ts
+    is_snowfall = tas < -1
 
     Ps = (is_snowfall * prcp) + ((1 - is_snowfall) * 0.0)
     Pa = (is_snowfall * 0.0) + ((1 - is_snowfall) * prcp)
@@ -75,7 +75,7 @@ def update_state(state, forcing, params):
     # Snowmelt is assumed to occur if temperature
     # is above a threshold (Tm), but is limited to
     # the volume of the snowpack
-    is_snowmelt = tas > Tm
+    is_snowmelt = tas > 1
     Ms = is_snowmelt * (2.63 + 2.55 * tas + 0.0912 * tas * Pa) + (
         (1 - is_snowmelt) * 0.0
     )
@@ -88,7 +88,7 @@ def update_state(state, forcing, params):
     # Canopy & throughfall
     #########################
     # Maximum canopy storage scales with LAI
-    Wi_max = Clai * lai
+    Wi_max = 0.25 * lai
 
     # Open water evaporation rate assumed to be PET
     Eow = calculate_potential_evapotranspiration(tas, doy, phi)
@@ -155,49 +155,60 @@ def update_state(state, forcing, params):
 
 
 @jax.jit
-def run_wbm_jax(
-    initial_conditions,
-    forcing_data,
-    parameters,
-    constants,
+def wbm_jax(
+    tas,
+    prcp, 
+    Ws_init,
+    Wi_init,
+    Sp_init,
+    clayfrac,
+    sandfrac,
+    siltfrac,
+    lai,
+    phi,
+    doy,
+    params,
 ):
     """
     MAIN SOIL MOISTURE SIMULATION CODE
-
-    ** All arguments should be dicts with correct names! **
-
-    initial_conditions: Ws_init, Wi_init, Sp_init
-    forcing_data: prcp, tas
-    params: Ts, Tm, rootDepth, awCap, wiltingp, GS_start, GS_length, alpha, betaHBV
-    constants: lai, Kpet, phi, nt, doy
     """
 
-    ##################################
-    # Read arguments
-    ##################################
-    Ws_init, Wi_init, Sp_init = initial_conditions
-
-    tas, prcp = forcing_data
-
-    Ts, Tm, Clai, awCap, wiltingp, alpha, betaHBV, Kmin, Kmax, Klai = parameters
-
-    rootDepth, lai, phi, doy = constants
+    # Read parameters (must be correct order!)
+    awCap_claycoef, awCap_sandcoef, awCap_siltcoef, \
+        wiltingp_claycoef, wiltingp_sandcoef, wiltingp_siltcoef, \
+        alpha_claycoef, alpha_sandcoef, alpha_siltcoef, \
+        betaHBV_claycoef, betaHBV_sandcoef, betaHBV_siltcoef, \
+        Kmin_claycoef, Kmin_sandcoef, Kmin_siltcoef, \
+        Kmax_claycoef, Kmax_sandcoef, Kmax_siltcoef, \
+        Klai_claycoef, Klai_sandcoef, Klai_siltcoef = params
+    
+    # Construct gridpoint parameters
+    awCap = jnp.exp(awCap_claycoef) * clayfrac + jnp.exp(awCap_sandcoef) * sandfrac + jnp.exp(awCap_siltcoef) * siltfrac
+    wiltingp = jnp.exp(wiltingp_claycoef) * clayfrac + jnp.exp(wiltingp_sandcoef) * sandfrac + jnp.exp(wiltingp_siltcoef) * siltfrac
+    alpha = 1. + jnp.exp(alpha_claycoef) * clayfrac + jnp.exp(alpha_sandcoef) * sandfrac + jnp.exp(alpha_siltcoef) * siltfrac
+    betaHBV = 1. + jnp.exp(betaHBV_claycoef) * clayfrac + jnp.exp(betaHBV_sandcoef) * sandfrac + jnp.exp(betaHBV_siltcoef) * siltfrac
+    Kmin = jnp.exp(Kmin_claycoef) * clayfrac + jnp.exp(Kmin_sandcoef) * sandfrac + jnp.exp(Kmin_siltcoef) * siltfrac
+    Kmax = jnp.exp(Kmax_claycoef) * clayfrac + jnp.exp(Kmax_sandcoef) * sandfrac + jnp.exp(Kmax_siltcoef) * siltfrac
+    Klai = jnp.exp(Klai_claycoef) * clayfrac + jnp.exp(Klai_sandcoef) * sandfrac + jnp.exp(Klai_siltcoef) * siltfrac
 
     # Soil moisture capacity
-    Wcap = awCap * rootDepth / 1000
+    rootDepth = 1000.
+    Wcap = awCap * rootDepth / 1000.
 
     # PET coefficicient timeseries
-    Kpet = jnp.array([Kmin + (Kmax - Kmin) * (1 - jnp.exp(-Klai * l)) for l in lai])
+    Kpet = Kmin + (Kmax - Kmin) * (1 - jnp.exp(-Klai * lai))
 
     # Prepare passing to jax lax scan
-    forcing = jnp.stack([tas, prcp, lai, Kpet, doy], axis=1)[1:,]
-    params = Ts, Tm, Clai, wiltingp, alpha, betaHBV, Wcap, phi
+    scan_forcing = jnp.stack([tas, prcp, lai, Kpet, doy], axis=1)[1:,] # skip first day since provided by init
+    scan_params = wiltingp, alpha, betaHBV, Wcap, phi
 
-    update_fn = partial(update_state, params=params)
+    # Update function
+    update_fn = partial(update_state, params=scan_params)
 
     # Initial conditions
     init = (Ws_init, Wi_init, Sp_init)
 
-    outs, Ws_out = jax.lax.scan(update_fn, init, forcing)
+    # Run it
+    outs, Ws_out = jax.lax.scan(update_fn, init, scan_forcing)
 
     return Ws_out
