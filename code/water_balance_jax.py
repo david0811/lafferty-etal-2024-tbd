@@ -183,7 +183,7 @@ def wbm_jax(
     params,
 ):
     """
-    MAIN SOIL MOISTURE SIMULATION CODE
+    Run JAX version of WBM.
     """
 
     # Read parameters (must be correct order!)
@@ -233,117 +233,66 @@ def wbm_jax(
     )  # return with initial condition included
 
 
+###########################
+# Kc timeseries function
+###########################
 @jax.jit
-def wbm_jax_spatial(
-    tas,
-    prcp,
-    Ws_init,
-    Wi_init,
-    Sp_init,
-    clayfrac,
-    sandfrac,
-    siltfrac,
+def construct_Kpet_vec(
+    GS_start,
+    GS_length,
+    L_ini,
+    L_dev,
+    L_mid,
+    L_late,
+    Kc_ini,
+    Kc_mid,
+    Kc_end,
+    K_min,
+    K_max,
     lai,
-    phi,
-    doy,
-    params,
 ):
-    """
-    MAIN SOIL MOISTURE SIMULATION CODE
-    """
+    # Out
+    Kpet_out = jnp.zeros(365)
 
-    # Read parameters (must be correct order!)
-    (
-        awCap_claycoef,
-        awCap_sandcoef,
-        awCap_siltcoef,
-        wiltingp_claycoef,
-        wiltingp_sandcoef,
-        wiltingp_siltcoef,
-        alpha_claycoef,
-        alpha_sandcoef,
-        alpha_siltcoef,
-        betaHBV_claycoef,
-        betaHBV_sandcoef,
-        betaHBV_siltcoef,
-        Kmin_claycoef,
-        Kmin_sandcoef,
-        Kmin_siltcoef,
-        Kmax_claycoef,
-        Kmax_sandcoef,
-        Kmax_siltcoef,
-        Klai_claycoef,
-        Klai_sandcoef,
-        Klai_siltcoef,
-    ) = params
+    # Day of year
+    doy = jnp.arange(365) + 1.0
 
-    # Construct gridpoint parameters
-    awCap = (
-        jnp.exp(awCap_claycoef) * clayfrac
-        + jnp.exp(awCap_sandcoef) * sandfrac
-        + jnp.exp(awCap_siltcoef) * siltfrac
+    # Get days from relative length
+    doy_ini = L_ini * GS_length
+    doy_dev = L_dev * GS_length
+    doy_mid = L_mid * GS_length
+    doy_late = L_late * GS_length
+
+    # Loop through year
+    pre_GS = doy < GS_start
+    Kpet_out += pre_GS * (K_min + (K_max - K_min) * (1 - jnp.exp(-0.7 * lai)))
+
+    ini_period = (doy < (GS_start + doy_ini)) & (doy >= GS_start)
+    Kpet_out += ini_period * Kc_ini
+
+    dev_period = (doy < (GS_start + doy_ini + doy_dev)) & (
+        doy >= (GS_start + doy_ini)
     )
-    wiltingp = (
-        jnp.exp(wiltingp_claycoef) * clayfrac
-        + jnp.exp(wiltingp_sandcoef) * sandfrac
-        + jnp.exp(wiltingp_siltcoef) * siltfrac
-    )
-    alpha = (
-        1.0
-        + jnp.exp(alpha_claycoef) * clayfrac
-        + jnp.exp(alpha_sandcoef) * sandfrac
-        + jnp.exp(alpha_siltcoef) * siltfrac
-    )
-    betaHBV = (
-        1.0
-        + jnp.exp(betaHBV_claycoef) * clayfrac
-        + jnp.exp(betaHBV_sandcoef) * sandfrac
-        + jnp.exp(betaHBV_siltcoef) * siltfrac
-    )
-    Kmin = (
-        jnp.exp(Kmin_claycoef) * clayfrac
-        + jnp.exp(Kmin_sandcoef) * sandfrac
-        + jnp.exp(Kmin_siltcoef) * siltfrac
-    )
-    Kmax = (
-        jnp.exp(Kmax_claycoef) * clayfrac
-        + jnp.exp(Kmax_sandcoef) * sandfrac
-        + jnp.exp(Kmax_siltcoef) * siltfrac
-    )
-    Klai = (
-        jnp.exp(Klai_claycoef) * clayfrac
-        + jnp.exp(Klai_sandcoef) * sandfrac
-        + jnp.exp(Klai_siltcoef) * siltfrac
+    Kpet_out += dev_period * (
+        Kc_ini + (Kc_mid - Kc_ini) * ((doy - (GS_start + doy_ini)) / doy_dev)
     )
 
-    # Soil moisture capacity
-    rootDepth = 1000.0
-    Wcap = awCap * rootDepth / 1000.0
+    mid_period = (doy < (GS_start + doy_ini + doy_dev + doy_mid)) & (
+        doy >= (GS_start + doy_ini + doy_dev)
+    )
+    Kpet_out += mid_period * Kc_mid
 
-    # PET coefficicient timeseries
-    Kpet = Kmin + (Kmax - Kmin) * (1 - jnp.exp(-Klai * lai))
-
-    # Prepare passing to jax lax scan
-    scan_forcing = jnp.stack(
-        [tas, prcp, lai, Kpet, doy],
-        axis=1,
-    )[1:,]  # skip first day since provided by init
-
-    scan_params = (
-        wiltingp,
-        alpha,
-        betaHBV,
-        Wcap,
-        phi,
+    down_period = (
+        doy < (GS_start + doy_ini + doy_dev + doy_mid + doy_late)
+    ) & (doy >= (GS_start + doy_ini + doy_dev + doy_mid))
+    Kpet_out += down_period * (
+        Kc_mid
+        - (Kc_mid - Kc_end)
+        * (doy - (GS_start + doy_ini + doy_dev + doy_mid))
+        / doy_late
     )
 
-    # Update function
-    update_fn = partial(update_state, params=scan_params)
+    post_GS = doy >= (GS_start + doy_ini + doy_dev + doy_mid + doy_late)
+    Kpet_out += post_GS * (K_min + (K_max - K_min) * (1 - jnp.exp(-0.7 * lai)))
 
-    # Initial conditions
-    init = (Ws_init, Wi_init, Sp_init)
-
-    # Run it
-    outs, Ws_out = jax.lax.scan(update_fn, init, scan_forcing)
-
-    return Ws_out
+    return Kpet_out
