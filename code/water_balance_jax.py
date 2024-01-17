@@ -4,6 +4,9 @@ import jax
 import jax.numpy as jnp
 
 
+###############################
+# STATE UPDATE FUNCTION
+###############################
 @jax.jit
 def update_state(state, forcing, params):
     """
@@ -170,6 +173,9 @@ def update_state(state, forcing, params):
     return (Ws_new, Wi, Sp), Ws_out
 
 
+###############################
+# RUN WBM FUNCTION
+###############################
 @jax.jit
 def wbm_jax(
     tas,
@@ -223,13 +229,13 @@ def wbm_jax(
     update_fn = partial(update_state, params=scan_params)
 
     # Initial conditions
-    init = (Ws_init, Wi_init, Sp_init)
+    init = (jnp.maximum(Ws_init - wiltingp, 0.0), Wi_init, Sp_init)
 
     # Run it
     outs, Ws_out = jax.lax.scan(update_fn, init, scan_forcing)
 
     return jnp.insert(
-        Ws_out, 0, Ws_init + wiltingp
+        Ws_out, 0, Ws_init
     )  # return with initial condition included
 
 
