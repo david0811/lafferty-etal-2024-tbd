@@ -245,7 +245,7 @@ def wbm_jax(
 @jax.jit
 def construct_Kpet_vec(
     GS_start,
-    GS_length,
+    GS_end,
     L_ini,
     L_dev,
     L_mid,
@@ -264,6 +264,7 @@ def construct_Kpet_vec(
     doy = jnp.arange(365) + 1.0
 
     # Get days from relative length
+    GS_length = GS_end - GS_start
     doy_ini = L_ini * GS_length
     doy_dev = L_dev * GS_length
     doy_mid = L_mid * GS_length
