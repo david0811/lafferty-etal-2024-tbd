@@ -198,13 +198,14 @@ def wbm_jax(
         Tm,
         wiltingp,
         awCap,
+        rootDepth,
         alpha,
         betaHBV,
     ) = params
 
     # Soil moisture capacity
-    rootDepth = 1000.0
-    Wcap = awCap * rootDepth / 1000.0
+    Wcap = awCap * rootDepth
+    wiltingp_scaled = wiltingp * rootDepth
 
     # Prepare passing to jax lax scan
     n_yrs = int(tas.shape[0] / 365)
@@ -218,7 +219,7 @@ def wbm_jax(
     scan_params = (
         Ts,
         Tm,
-        wiltingp,
+        wiltingp_scaled,
         alpha,
         betaHBV,
         Wcap,
@@ -229,7 +230,7 @@ def wbm_jax(
     update_fn = partial(update_state, params=scan_params)
 
     # Initial conditions
-    init = (jnp.maximum(Ws_init - wiltingp, 0.0), Wi_init, Sp_init)
+    init = (jnp.maximum(Ws_init - wiltingp_scaled, 0.0), Wi_init, Sp_init)
 
     # Run it
     outs, Ws_out = jax.lax.scan(update_fn, init, scan_forcing)
