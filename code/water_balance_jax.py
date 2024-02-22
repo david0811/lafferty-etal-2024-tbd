@@ -293,6 +293,7 @@ def construct_Kpet_vec(
     down_period = (
         doy < (GS_start + doy_ini + doy_dev + doy_mid + doy_late)
     ) & (doy >= (GS_start + doy_ini + doy_dev + doy_mid))
+
     Kpet_out += down_period * (
         Kc_mid
         - (Kc_mid - Kc_end)
