@@ -15,18 +15,18 @@ awCap_claycoef = jnp.log(100.0)
 awCap_sandcoef = jnp.log(100.0)
 awCap_siltcoef = jnp.log(100.0)
 
-awCap_sand = jnp.log(300)
-awCap_loamy_sand = jnp.log(300)
-awCap_sandy_loam = jnp.log(300)
-awCap_silt_loam = jnp.log(300)
-awCap_silt = jnp.log(300)
-awCap_loam = jnp.log(300)
-awCap_sandy_clay_loam = jnp.log(300)
-awCap_silty_clay_loam = jnp.log(300)
-awCap_clay_loam = jnp.log(300)
-awCap_sandy_clay = jnp.log(300)
-awCap_silty_clay = jnp.log(300)
-awCap_clay = jnp.log(300)
+awCap_sand = jnp.log(400)
+awCap_loamy_sand = jnp.log(400)
+awCap_sandy_loam = jnp.log(400)
+awCap_silt_loam = jnp.log(400)
+awCap_silt = jnp.log(400)
+awCap_loam = jnp.log(400)
+awCap_sandy_clay_loam = jnp.log(400)
+awCap_silty_clay_loam = jnp.log(400)
+awCap_clay_loam = jnp.log(400)
+awCap_sandy_clay = jnp.log(400)
+awCap_silty_clay = jnp.log(400)
+awCap_clay = jnp.log(400)
 
 # wiltingp
 wiltingp_scalar = jnp.log(1.0)
@@ -34,18 +34,18 @@ wiltingp_claycoef = jnp.log(100.0)
 wiltingp_sandcoef = jnp.log(100.0)
 wiltingp_siltcoef = jnp.log(100.0)
 
-wiltingp_sand = jnp.log(100)
-wiltingp_loamy_sand = jnp.log(100)
-wiltingp_sandy_loam = jnp.log(100)
-wiltingp_silt_loam = jnp.log(100)
-wiltingp_silt = jnp.log(100)
-wiltingp_loam = jnp.log(100)
-wiltingp_sandy_clay_loam = jnp.log(100)
-wiltingp_silty_clay_loam = jnp.log(100)
-wiltingp_clay_loam = jnp.log(100)
-wiltingp_sandy_clay = jnp.log(100)
-wiltingp_silty_clay = jnp.log(100)
-wiltingp_clay = jnp.log(100)
+wiltingp_sand = jnp.log(150)
+wiltingp_loamy_sand = jnp.log(150)
+wiltingp_sandy_loam = jnp.log(150)
+wiltingp_silt_loam = jnp.log(150)
+wiltingp_silt = jnp.log(150)
+wiltingp_loam = jnp.log(150)
+wiltingp_sandy_clay_loam = jnp.log(150)
+wiltingp_silty_clay_loam = jnp.log(150)
+wiltingp_clay_loam = jnp.log(150)
+wiltingp_sandy_clay = jnp.log(150)
+wiltingp_silty_clay = jnp.log(150)
+wiltingp_clay = jnp.log(150)
 
 # alpha
 alpha_claycoef = jnp.log(0.5)
@@ -130,7 +130,7 @@ Kc_end_wheat = jnp.log(0.3)
 K_min_wheat = jnp.log(0.4)
 K_max_wheat = jnp.log(1.15)
 
-initial_params = jnp.array(
+initial_params_main = jnp.array(
     [
         awCap_scalar,
         wiltingp_scalar,
@@ -230,6 +230,12 @@ initial_params_vic = jnp.array(
         wiltingp_sandy_clay,
         wiltingp_silty_clay,
         wiltingp_clay,
+        # awCap_claycoef,
+        # awCap_sandcoef,
+        # awCap_siltcoef,
+        # wiltingp_claycoef,
+        # wiltingp_sandcoef,
+        # wiltingp_siltcoef,
         alpha_claycoef,
         alpha_sandcoef,
         alpha_siltcoef,

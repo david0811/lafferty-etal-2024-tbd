@@ -1,5 +1,5 @@
 # Parameter names
-param_names = [
+param_names_main = [
     "awCap_scalar",
     "wiltingp_scalar",
     "alpha_claycoef",
@@ -96,6 +96,12 @@ param_names_vic = [
     "wiltingp_sandy_clay",
     "wiltingp_silty_clay",
     "wiltingp_clay",
+    # "awCap_claycoef",
+    # "awCap_sandcoef",
+    # "awCap_siltcoef",
+    # "wiltingp_claycoef",
+    # "wiltingp_sandcoef",
+    # "wiltingp_siltcoef",
     "alpha_claycoef",
     "alpha_sandcoef",
     "alpha_siltcoef",

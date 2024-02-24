@@ -3,7 +3,9 @@ from water_balance_jax import construct_Kpet_vec, wbm_jax
 
 
 # Prediction function: non-VIC
-def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
+def make_prediction_main(
+    theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps
+):
     # Read inputs
     tas, prcp = x_forcing_nt
     lai = x_forcing_nyrs
@@ -206,12 +208,14 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
     # params that WBM sees
     awCap_scaled = awCap_scalar * awCap
     wiltingp_scaled = wiltingp_scalar * wiltingp
+
     alpha = (
         1.0
         + (alpha_claycoef * clayfrac)
         + (alpha_sandcoef * sandfrac)
         + (alpha_siltcoef * siltfrac)
     )
+
     betaHBV = (
         1.0
         + (betaHBV_claycoef * clayfrac)
@@ -239,6 +243,8 @@ def make_prediction_vic(
     lai = x_forcing_nyrs
 
     (
+        awCap_frac,
+        wiltingp_frac,
         sand,
         loamy_sand,
         sandy_loam,
@@ -295,6 +301,12 @@ def make_prediction_vic(
         wiltingp_sandy_clay,
         wiltingp_silty_clay,
         wiltingp_clay,
+        # awCap_claycoef,
+        # awCap_sandcoef,
+        # awCap_siltcoef,
+        # wiltingp_claycoef,
+        # wiltingp_sandcoef,
+        # wiltingp_siltcoef,
         alpha_claycoef,
         alpha_sandcoef,
         alpha_siltcoef,
@@ -466,7 +478,7 @@ def make_prediction_vic(
     Kpet = jnp.average(Kpets, weights=weights, axis=0)
 
     # params that WBM sees
-    awCap_scaled = (
+    awCap_scaled = 1 * (
         (awCap_sand * sand)
         + (awCap_loamy_sand * loamy_sand)
         + (awCap_sandy_loam * sandy_loam)
@@ -480,7 +492,7 @@ def make_prediction_vic(
         + (awCap_silty_clay * silty_clay)
         + (awCap_clay * clay)
     )
-    wiltingp_scaled = (
+    wiltingp_scaled = 1 * (
         (wiltingp_sand * sand)
         + (wiltingp_loamy_sand * loamy_sand)
         + (wiltingp_sandy_loam * sandy_loam)
@@ -494,6 +506,7 @@ def make_prediction_vic(
         + (wiltingp_silty_clay * silty_clay)
         + (wiltingp_clay * clay)
     )
+
     alpha = (
         1.0
         + (alpha_claycoef * clayfrac)

@@ -180,8 +180,9 @@ def process_forcing(subset_name, list_of_states):
             save_dict["prcp"] = prcp
 
             ############ Geophysical inputs
-            # Soil types for VIC
+            ### Soil types for VIC
             if obs_name == "VIC":
+                # sand
                 ds_sand = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_sand.nc"
@@ -191,6 +192,7 @@ def process_forcing(subset_name, list_of_states):
                 sand = np.transpose(ds_sand["sand"].to_numpy())
                 save_dict["sand"] = sand
 
+                # loamy_sand
                 ds_loamy_sand = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_loamy_sand.nc"
@@ -202,6 +204,7 @@ def process_forcing(subset_name, list_of_states):
                 )
                 save_dict["loamy_sand"] = loamy_sand
 
+                # sandy_loam
                 ds_sandy_loam = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_sandy_loam.nc"
@@ -213,6 +216,7 @@ def process_forcing(subset_name, list_of_states):
                 )
                 save_dict["sandy_loam"] = sandy_loam
 
+                # silt_loam
                 ds_silt_loam = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_silt_loam.nc"
@@ -222,6 +226,7 @@ def process_forcing(subset_name, list_of_states):
                 silt_loam = np.transpose(ds_silt_loam["silt_loam"].to_numpy())
                 save_dict["silt_loam"] = silt_loam
 
+                # silt
                 ds_silt = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_silt.nc"
@@ -231,6 +236,7 @@ def process_forcing(subset_name, list_of_states):
                 silt = np.transpose(ds_silt["silt"].to_numpy())
                 save_dict["silt"] = silt
 
+                # loam
                 ds_loam = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_loam.nc"
@@ -240,6 +246,7 @@ def process_forcing(subset_name, list_of_states):
                 loam = np.transpose(ds_loam["loam"].to_numpy())
                 save_dict["loam"] = loam
 
+                # sandy_clay_loam
                 ds_sandy_clay_loam = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_sandy_clay_loam.nc"
@@ -251,6 +258,7 @@ def process_forcing(subset_name, list_of_states):
                 )
                 save_dict["sandy_clay_loam"] = sandy_clay_loam
 
+                # silty_clay_loam
                 ds_silty_clay_loam = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_silty_clay_loam.nc"
@@ -262,6 +270,7 @@ def process_forcing(subset_name, list_of_states):
                 )
                 save_dict["silty_clay_loam"] = silty_clay_loam
 
+                # clay_loam
                 ds_clay_loam = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_clay_loam.nc"
@@ -271,6 +280,7 @@ def process_forcing(subset_name, list_of_states):
                 clay_loam = np.transpose(ds_clay_loam["clay_loam"].to_numpy())
                 save_dict["clay_loam"] = clay_loam
 
+                # sandy_clay
                 ds_sandy_clay = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_sandy_clay.nc"
@@ -282,6 +292,7 @@ def process_forcing(subset_name, list_of_states):
                 )
                 save_dict["sandy_clay"] = sandy_clay
 
+                # silty_clay
                 ds_silty_clay = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_silty_clay.nc"
@@ -293,6 +304,7 @@ def process_forcing(subset_name, list_of_states):
                 )
                 save_dict["silty_clay"] = silty_clay
 
+                # clay
                 ds_clay = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/NLDAS_clay.nc"
@@ -302,7 +314,31 @@ def process_forcing(subset_name, list_of_states):
                 clay = np.transpose(ds_clay["clay"].to_numpy())
                 save_dict["clay"] = clay
 
-                # Root Depth
+                # wilting point multiplier
+                ds_wiltingp_frac = _subset_states(
+                    xr.open_dataset(
+                        f"{project_data_path}/WBM/geo_inputs/VIC_wiltingp_frac.nc"
+                    ),
+                    list_of_states,
+                )
+                wiltingp_frac = np.transpose(
+                    ds_wiltingp_frac["wiltingp_frac"].to_numpy()
+                )
+                save_dict["wiltingp_frac"] = wiltingp_frac
+
+                # awCap multiplier
+                ds_awCap_frac = _subset_states(
+                    xr.open_dataset(
+                        f"{project_data_path}/WBM/geo_inputs/VIC_awCap_frac.nc"
+                    ),
+                    list_of_states,
+                )
+                awCap_frac = np.transpose(
+                    ds_awCap_frac["awCap_frac"].to_numpy()
+                )
+                save_dict["awCap_frac"] = awCap_frac
+
+                ### Root Depth
                 ds_rootDepth = _subset_states(
                     xr.open_dataset(
                         f"{project_data_path}/WBM/geo_inputs/VIC_rootDepth.nc"

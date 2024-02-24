@@ -3,7 +3,7 @@ import jax.numpy as jnp
 ### Parameter bounds
 # awCap
 awCap_scalar_lower, awCap_scalar_upper = (
-    jnp.log(0.1),
+    jnp.log(0.5),
     jnp.log(5.0),
 )  # Central 1.
 awCap_claycoef_lower, awCap_claycoef_upper = (
@@ -40,7 +40,7 @@ awCap_clay_lower, awCap_clay_upper = jnp.log(10), jnp.log(1000)
 
 # wiltingp
 wiltingp_scalar_lower, wiltingp_scalar_upper = (
-    jnp.log(0.1),
+    jnp.log(0.5),
     jnp.log(5.0),
 )  # Central 1.
 wiltingp_claycoef_lower, wiltingp_claycoef_upper = (
@@ -363,7 +363,7 @@ K_max_wheat_lower, K_max_wheat_upper = (
 )  # central 1.15
 
 
-params_lower = jnp.array(
+params_main_lower = jnp.array(
     [
         awCap_scalar_lower,
         wiltingp_scalar_lower,
@@ -438,7 +438,7 @@ params_lower = jnp.array(
 )
 
 
-params_upper = jnp.array(
+params_main_upper = jnp.array(
     [
         awCap_scalar_upper,
         wiltingp_scalar_upper,
@@ -538,6 +538,12 @@ params_vic_lower = jnp.array(
         wiltingp_sandy_clay_lower,
         wiltingp_silty_clay_lower,
         wiltingp_clay_lower,
+        # awCap_claycoef_lower,
+        # awCap_sandcoef_lower,
+        # awCap_siltcoef_lower,
+        # wiltingp_claycoef_lower,
+        # wiltingp_sandcoef_lower,
+        # wiltingp_siltcoef_lower,
         alpha_claycoef_lower,
         alpha_sandcoef_lower,
         alpha_siltcoef_lower,
@@ -634,6 +640,12 @@ params_vic_upper = jnp.array(
         wiltingp_sandy_clay_upper,
         wiltingp_silty_clay_upper,
         wiltingp_clay_upper,
+        # awCap_claycoef_upper,
+        # awCap_sandcoef_upper,
+        # awCap_siltcoef_upper,
+        # wiltingp_claycoef_upper,
+        # wiltingp_sandcoef_upper,
+        # wiltingp_siltcoef_upper,
         alpha_claycoef_upper,
         alpha_sandcoef_upper,
         alpha_siltcoef_upper,

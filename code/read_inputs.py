@@ -26,6 +26,8 @@ def read_inputs(subset_name, obs_name, remove_nans):
 
     # Soil properties
     if obs_name == "VIC":
+        awCap_frac = npz["awCap_frac"]
+        wiltingp_frac = npz["wiltingp_frac"]
         sand = npz["sand"]
         loamy_sand = npz["loamy_sand"]
         sandy_loam = npz["sandy_loam"]
@@ -38,6 +40,9 @@ def read_inputs(subset_name, obs_name, remove_nans):
         sandy_clay = npz["sandy_clay"]
         silty_clay = npz["silty_clay"]
         clay = npz["clay"]
+    else:
+        awCap = npz["awCap"]
+        wiltingp = npz["wiltingp"]
 
     clayfrac = npz["clayfrac"]
     sandfrac = npz["sandfrac"]
@@ -53,8 +58,8 @@ def read_inputs(subset_name, obs_name, remove_nans):
     soybeans = npz["soybeans"]
     durum_wheat = npz["durum_wheat"]
     spring_wheat = npz["spring_wheat"]
-    winter_wheat = npz["winter_wheat"]
-    wheat = durum_wheat + spring_wheat + winter_wheat
+    # winter_wheat = npz["winter_wheat"]
+    wheat = durum_wheat + spring_wheat  # + winter_wheat
 
     # cropland_other = npz["cropland_other"]
     # water = npz["water"]
@@ -124,6 +129,8 @@ def read_inputs(subset_name, obs_name, remove_nans):
 
     ## Maps
     if obs_name == "VIC":
+        awCap_frac_in = awCap_frac.reshape(nx * ny)
+        wiltingp_frac_in = wiltingp_frac.reshape(nx * ny)
         sand_in = sand.reshape(nx * ny)
         loamy_sand_in = loamy_sand.reshape(nx * ny)
         sandy_loam_in = sandy_loam.reshape(nx * ny)
@@ -136,6 +143,9 @@ def read_inputs(subset_name, obs_name, remove_nans):
         sandy_clay_in = sandy_clay.reshape(nx * ny)
         silty_clay_in = silty_clay.reshape(nx * ny)
         clay_in = clay.reshape(nx * ny)
+    else:
+        awCap_in = awCap.reshape(nx * ny)
+        wiltingp_in = wiltingp.reshape(nx * ny)
 
     Ws_init_in = Ws_init.reshape(nx * ny)
 
@@ -156,37 +166,60 @@ def read_inputs(subset_name, obs_name, remove_nans):
     wheat_in = wheat.reshape(nx * ny)
 
     # all_other_in = all_other.reshape(nx * ny)
-
-    x_maps = jnp.stack(
-        [
-            sand_in,
-            loamy_sand_in,
-            sandy_loam_in,
-            silt_loam_in,
-            silt_in,
-            loam_in,
-            sandy_clay_loam_in,
-            silty_clay_loam_in,
-            clay_loam_in,
-            sandy_clay_in,
-            silty_clay_in,
-            clay_in,
-            Ws_init_in,
-            clayfrac_in,
-            sandfrac_in,
-            siltfrac_in,
-            rootDepth_in,
-            lats_in,
-            elev_std_in,
-            corn_in,
-            cotton_in,
-            rice_in,
-            sorghum_in,
-            soybeans_in,
-            wheat_in,
-        ],
-        axis=1,
-    )
+    if obs_name == "VIC":
+        x_maps = jnp.stack(
+            [
+                awCap_frac_in,
+                wiltingp_frac_in,
+                sand_in,
+                loamy_sand_in,
+                sandy_loam_in,
+                silt_loam_in,
+                silt_in,
+                loam_in,
+                sandy_clay_loam_in,
+                silty_clay_loam_in,
+                clay_loam_in,
+                sandy_clay_in,
+                silty_clay_in,
+                clay_in,
+                Ws_init_in,
+                clayfrac_in,
+                sandfrac_in,
+                siltfrac_in,
+                rootDepth_in,
+                lats_in,
+                elev_std_in,
+                corn_in,
+                cotton_in,
+                rice_in,
+                sorghum_in,
+                soybeans_in,
+                wheat_in,
+            ],
+            axis=1,
+        )
+    else:
+        x_maps = jnp.stack(
+            [
+                awCap_in,
+                wiltingp_in,
+                Ws_init_in,
+                clayfrac_in,
+                sandfrac_in,
+                siltfrac_in,
+                rootDepth_in,
+                lats_in,
+                elev_std_in,
+                corn_in,
+                cotton_in,
+                rice_in,
+                sorghum_in,
+                soybeans_in,
+                wheat_in,
+            ],
+            axis=1,
+        )
     nan_inds_maps = jnp.isnan(x_maps).any(axis=1)
 
     # Remove NaNs if desired
