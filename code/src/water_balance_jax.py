@@ -20,10 +20,10 @@ def update_state(state, forcing, params):
     (
         Ts,
         Tm,
+        Wcap,
         wiltingp,
         alpha,
         betaHBV,
-        Wcap,
         phi,
     ) = params
 
@@ -196,16 +196,16 @@ def wbm_jax(
     (
         Ts,
         Tm,
-        wiltingp,
         awCap,
+        wiltingp,
         rootDepth,
         alpha,
         betaHBV,
     ) = params
 
     # Soil moisture capacity
-    Wcap = awCap * rootDepth / rootDepth
-    wiltingp_scaled = wiltingp * rootDepth / rootDepth
+    Wcap = awCap * rootDepth
+    wiltingp_scaled = wiltingp * rootDepth
 
     # Prepare passing to jax lax scan
     n_yrs = int(tas.shape[0] / 365)
@@ -219,10 +219,10 @@ def wbm_jax(
     scan_params = (
         Ts,
         Tm,
+        Wcap,
         wiltingp_scaled,
         alpha,
         betaHBV,
-        Wcap,
         phi,
     )
 
@@ -256,6 +256,7 @@ def construct_Kpet_crop(
     Kc_end,
     Kmin,
     Kmax,
+    c_lai,
     lai,
 ):
     # Out
@@ -302,7 +303,7 @@ def construct_Kpet_crop(
     )
 
     post_GS = doy >= (GS_start + doy_ini + doy_dev + doy_mid + doy_late)
-    Kpet_out += post_GS * (Kmin + (Kmax - Kmin) * (1 - jnp.exp(-0.7 * lai)))
+    Kpet_out += post_GS * (Kmin + (Kmax - Kmin) * (1 - jnp.exp(-c_lai * lai)))
 
     return Kpet_out
 
@@ -311,7 +312,7 @@ def construct_Kpet_crop(
 def construct_Kpet_gen(
     Kmin,
     Kmax,
-    lai,
     c_lai,
+    lai,
 ):
     return Kmin + (Kmax - Kmin) * (1 - jnp.exp(-c_lai * lai))

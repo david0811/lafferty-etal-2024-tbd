@@ -65,8 +65,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_corn,
         Kc_mid_corn,
         Kc_end_corn,
-        K_min_corn,
-        K_max_corn,
+        Kmin_corn,
+        Kmax_corn,
+        c_lai_corn,
         GS_start_cotton,
         GS_end_cotton,
         L_ini_cotton,
@@ -75,8 +76,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_cotton,
         Kc_mid_cotton,
         Kc_end_cotton,
-        K_min_cotton,
-        K_max_cotton,
+        Kmin_cotton,
+        Kmax_cotton,
+        c_lai_cotton,
         GS_start_rice,
         GS_end_rice,
         L_ini_rice,
@@ -85,8 +87,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_rice,
         Kc_mid_rice,
         Kc_end_rice,
-        K_min_rice,
-        K_max_rice,
+        Kmin_rice,
+        Kmax_rice,
+        c_lai_rice,
         GS_start_sorghum,
         GS_end_sorghum,
         L_ini_sorghum,
@@ -95,8 +98,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_sorghum,
         Kc_mid_sorghum,
         Kc_end_sorghum,
-        K_min_sorghum,
-        K_max_sorghum,
+        Kmin_sorghum,
+        Kmax_sorghum,
+        c_lai_sorghum,
         GS_start_soybeans,
         GS_end_soybeans,
         L_ini_soybeans,
@@ -105,8 +109,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_soybeans,
         Kc_mid_soybeans,
         Kc_end_soybeans,
-        K_min_soybeans,
-        K_max_soybeans,
+        Kmin_soybeans,
+        Kmax_soybeans,
+        c_lai_soybeans,
         GS_start_wheat,
         GS_end_wheat,
         L_ini_wheat,
@@ -115,34 +120,49 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_wheat,
         Kc_mid_wheat,
         Kc_end_wheat,
-        K_min_wheat,
-        K_max_wheat,
+        Kmin_wheat,
+        Kmax_wheat,
+        c_lai_wheat,
+        c_lai_wheat,
         Kmin_cropland_other,
         Kmax_cropland_other,
+        c_lai_cropland_other,
         Kmin_evergreen_needleleaf,
         Kmax_evergreen_needleleaf,
+        c_lai_evergreen_needleleaf,
         Kmin_evergreen_broadleaf,
         Kmax_evergreen_broadleaf,
+        c_lai_evergreen_broadleaf,
         Kmin_deciduous_needleleaf,
         Kmax_deciduous_needleleaf,
+        c_lai_deciduous_needleleaf,
         Kmin_deciduous_broadleaf,
         Kmax_deciduous_broadleaf,
+        c_lai_deciduous_broadleaf,
         Kmin_mixed_forest,
         Kmax_mixed_forest,
+        c_lai_mixed_forest,
         Kmin_woodland,
         Kmax_woodland,
+        c_lai_woodland,
         Kmin_wooded_grassland,
         Kmax_wooded_grassland,
+        c_lai_wooded_grassland,
         Kmin_closed_shurbland,
         Kmax_closed_shurbland,
+        c_lai_closed_shurbland,
         Kmin_open_shrubland,
         Kmax_open_shrubland,
+        c_lai_open_shrubland,
         Kmin_grassland,
         Kmax_grassland,
+        c_lai_grassland,
         Kmin_barren,
         Kmax_barren,
+        c_lai_barren,
         Kmin_urban,
         Kmax_urban,
+        c_lai_urban,
     ) = jnp.exp(theta)
 
     # Construct Kpet as weighted average
@@ -156,8 +176,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_corn,
         Kc_mid_corn,
         Kc_end_corn,
-        K_min_corn,
-        K_max_corn,
+        Kmin_corn,
+        Kmax_corn,
+        c_lai_corn,
         lai,
     )
     Kpet_cotton = construct_Kpet_crop(
@@ -170,8 +191,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_cotton,
         Kc_mid_cotton,
         Kc_end_cotton,
-        K_min_cotton,
-        K_max_cotton,
+        Kmin_cotton,
+        Kmax_cotton,
+        c_lai_cotton,
         lai,
     )
     Kpet_rice = construct_Kpet_crop(
@@ -184,8 +206,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_rice,
         Kc_mid_rice,
         Kc_end_rice,
-        K_min_rice,
-        K_max_rice,
+        Kmin_rice,
+        Kmax_rice,
+        c_lai_rice,
         lai,
     )
     Kpet_sorghum = construct_Kpet_crop(
@@ -198,8 +221,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_sorghum,
         Kc_mid_sorghum,
         Kc_end_sorghum,
-        K_min_sorghum,
-        K_max_sorghum,
+        Kmin_sorghum,
+        Kmax_sorghum,
+        c_lai_sorghum,
         lai,
     )
     Kpet_soybeans = construct_Kpet_crop(
@@ -212,8 +236,9 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_soybeans,
         Kc_mid_soybeans,
         Kc_end_soybeans,
-        K_min_soybeans,
-        K_max_soybeans,
+        Kmin_soybeans,
+        Kmax_soybeans,
+        c_lai_soybeans,
         lai,
     )
     Kpet_wheat = construct_Kpet_crop(
@@ -226,47 +251,91 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kc_ini_wheat,
         Kc_mid_wheat,
         Kc_end_wheat,
-        K_min_wheat,
-        K_max_wheat,
+        Kmin_wheat,
+        Kmax_wheat,
+        c_lai_wheat,
         lai,
     )
 
-    Kmin = (
-        (Kmin_cropland_other * cropland_other)
-        + (Kmin_evergreen_needleleaf * evergreen_needleleaf)
-        + (Kmin_evergreen_broadleaf * evergreen_broadleaf)
-        + (Kmin_deciduous_needleleaf * deciduous_needleleaf)
-        + (Kmin_deciduous_broadleaf * deciduous_broadleaf)
-        + (Kmin_mixed_forest * mixed_forest)
-        + (Kmin_woodland * woodland)
-        + (Kmin_wooded_grassland * wooded_grassland)
-        + (Kmin_closed_shurbland * closed_shurbland)
-        + (Kmin_open_shrubland * open_shrubland)
-        + (Kmin_grassland * grassland)
-        + (Kmin_barren * barren)
-        + (Kmin_urban * urban)
+    Kpet_cropland_other = construct_Kpet_gen(
+        Kmin_cropland_other, Kmax_cropland_other, c_lai_cropland_other, lai
     )
-
-    Kmax = (
-        (Kmax_cropland_other * cropland_other)
-        + (Kmax_evergreen_needleleaf * evergreen_needleleaf)
-        + (Kmax_evergreen_broadleaf * evergreen_broadleaf)
-        + (Kmax_deciduous_needleleaf * deciduous_needleleaf)
-        + (Kmax_deciduous_broadleaf * deciduous_broadleaf)
-        + (Kmax_mixed_forest * mixed_forest)
-        + (Kmax_woodland * woodland)
-        + (Kmax_wooded_grassland * wooded_grassland)
-        + (Kmax_closed_shurbland * closed_shurbland)
-        + (Kmax_open_shrubland * open_shrubland)
-        + (Kmax_grassland * grassland)
-        + (Kmax_barren * barren)
-        + (Kmax_urban * urban)
+    Kpet_evergreen_needleleaf = construct_Kpet_gen(
+        Kmin_evergreen_needleleaf,
+        Kmax_evergreen_needleleaf,
+        c_lai_evergreen_needleleaf,
+        lai,
     )
+    Kpet_evergreen_broadleaf = construct_Kpet_gen(
+        Kmin_evergreen_broadleaf,
+        Kmax_evergreen_broadleaf,
+        c_lai_evergreen_broadleaf,
+        lai,
+    )
+    Kpet_deciduous_needleleaf = construct_Kpet_gen(
+        Kmin_deciduous_needleleaf,
+        Kmax_deciduous_needleleaf,
+        c_lai_deciduous_needleleaf,
+        lai,
+    )
+    Kpet_deciduous_broadleaf = construct_Kpet_gen(
+        Kmin_deciduous_broadleaf,
+        Kmax_deciduous_broadleaf,
+        c_lai_deciduous_broadleaf,
+        lai,
+    )
+    Kpet_mixed_forest = construct_Kpet_gen(
+        Kmin_mixed_forest, Kmax_mixed_forest, c_lai_mixed_forest, lai
+    )
+    Kpet_woodland = construct_Kpet_gen(
+        Kmin_woodland, Kmax_woodland, c_lai_woodland, lai
+    )
+    Kpet_wooded_grassland = construct_Kpet_gen(
+        Kmin_wooded_grassland,
+        Kmax_wooded_grassland,
+        c_lai_wooded_grassland,
+        lai,
+    )
+    Kpet_closed_shurbland = construct_Kpet_gen(
+        Kmin_closed_shurbland,
+        Kmax_closed_shurbland,
+        c_lai_closed_shurbland,
+        lai,
+    )
+    Kpet_open_shrubland = construct_Kpet_gen(
+        Kmin_open_shrubland, Kmax_open_shrubland, c_lai_open_shrubland, lai
+    )
+    Kpet_grassland = construct_Kpet_gen(
+        Kmin_grassland, Kmax_grassland, c_lai_grassland, lai
+    )
+    Kpet_barren = construct_Kpet_gen(
+        Kmin_barren, Kmax_barren, c_lai_barren, lai
+    )
+    Kpet_urban = construct_Kpet_gen(Kmin_urban, Kmax_urban, c_lai_urban, lai)
 
-    Kpet_gen = construct_Kpet_gen(Kmin, Kmax, lai, 0.7)
-
-    other = 1.0 - (corn + cotton + rice + sorghum + soybeans + wheat)
-    weights = jnp.array([corn, cotton, rice, sorghum, soybeans, wheat, other])
+    weights = jnp.array(
+        [
+            corn,
+            cotton,
+            rice,
+            sorghum,
+            soybeans,
+            wheat,
+            cropland_other,
+            evergreen_needleleaf,
+            evergreen_broadleaf,
+            deciduous_needleleaf,
+            deciduous_broadleaf,
+            mixed_forest,
+            woodland,
+            wooded_grassland,
+            closed_shurbland,
+            open_shrubland,
+            grassland,
+            barren,
+            urban,
+        ]
+    )
     Kpets = jnp.array(
         [
             Kpet_corn,
@@ -275,7 +344,19 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
             Kpet_sorghum,
             Kpet_soybeans,
             Kpet_wheat,
-            Kpet_gen,
+            Kpet_cropland_other,
+            Kpet_evergreen_needleleaf,
+            Kpet_evergreen_broadleaf,
+            Kpet_deciduous_needleleaf,
+            Kpet_deciduous_broadleaf,
+            Kpet_mixed_forest,
+            Kpet_woodland,
+            Kpet_wooded_grassland,
+            Kpet_closed_shurbland,
+            Kpet_open_shrubland,
+            Kpet_grassland,
+            Kpet_barren,
+            Kpet_urban,
         ]
     )
     Kpet = jnp.average(Kpets, weights=weights, axis=0)
@@ -299,7 +380,7 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         + (betaHBV_elevcoef * elev_std)
     )
 
-    params = (Ts, Tm, wiltingp_scaled, awCap_scaled, rootDepth, alpha, betaHBV)
+    params = (Ts, Tm, awCap_scaled, wiltingp_scaled, rootDepth, alpha, betaHBV)
 
     # Make prediction
     prediction = wbm_jax(
@@ -397,8 +478,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_corn,
 #         Kc_mid_corn,
 #         Kc_end_corn,
-#         K_min_corn,
-#         K_max_corn,
+#         Kmin_corn,
+#         Kmax_corn,
 #         GS_start_cotton,
 #         GS_end_cotton,
 #         L_ini_cotton,
@@ -407,8 +488,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_cotton,
 #         Kc_mid_cotton,
 #         Kc_end_cotton,
-#         K_min_cotton,
-#         K_max_cotton,
+#         Kmin_cotton,
+#         Kmax_cotton,
 #         GS_start_rice,
 #         GS_end_rice,
 #         L_ini_rice,
@@ -417,8 +498,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_rice,
 #         Kc_mid_rice,
 #         Kc_end_rice,
-#         K_min_rice,
-#         K_max_rice,
+#         Kmin_rice,
+#         Kmax_rice,
 #         GS_start_sorghum,
 #         GS_end_sorghum,
 #         L_ini_sorghum,
@@ -427,8 +508,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_sorghum,
 #         Kc_mid_sorghum,
 #         Kc_end_sorghum,
-#         K_min_sorghum,
-#         K_max_sorghum,
+#         Kmin_sorghum,
+#         Kmax_sorghum,
 #         GS_start_soybeans,
 #         GS_end_soybeans,
 #         L_ini_soybeans,
@@ -437,8 +518,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_soybeans,
 #         Kc_mid_soybeans,
 #         Kc_end_soybeans,
-#         K_min_soybeans,
-#         K_max_soybeans,
+#         Kmin_soybeans,
+#         Kmax_soybeans,
 #         GS_start_wheat,
 #         GS_end_wheat,
 #         L_ini_wheat,
@@ -447,8 +528,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_wheat,
 #         Kc_mid_wheat,
 #         Kc_end_wheat,
-#         K_min_wheat,
-#         K_max_wheat,
+#         Kmin_wheat,
+#         Kmax_wheat,
 #     ) = jnp.exp(theta)
 
 #     # Construct Kpet as weighted average
@@ -462,8 +543,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_corn,
 #         Kc_mid_corn,
 #         Kc_end_corn,
-#         K_min_corn,
-#         K_max_corn,
+#         Kmin_corn,
+#         Kmax_corn,
 #         lai,
 #     )
 #     Kpet_cotton = construct_Kpet_crop(
@@ -476,8 +557,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_cotton,
 #         Kc_mid_cotton,
 #         Kc_end_cotton,
-#         K_min_cotton,
-#         K_max_cotton,
+#         Kmin_cotton,
+#         Kmax_cotton,
 #         lai,
 #     )
 #     Kpet_rice = construct_Kpet_crop(
@@ -490,8 +571,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_rice,
 #         Kc_mid_rice,
 #         Kc_end_rice,
-#         K_min_rice,
-#         K_max_rice,
+#         Kmin_rice,
+#         Kmax_rice,
 #         lai,
 #     )
 #     Kpet_sorghum = construct_Kpet_crop(
@@ -504,8 +585,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_sorghum,
 #         Kc_mid_sorghum,
 #         Kc_end_sorghum,
-#         K_min_sorghum,
-#         K_max_sorghum,
+#         Kmin_sorghum,
+#         Kmax_sorghum,
 #         lai,
 #     )
 #     Kpet_soybeans = construct_Kpet_crop(
@@ -518,8 +599,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_soybeans,
 #         Kc_mid_soybeans,
 #         Kc_end_soybeans,
-#         K_min_soybeans,
-#         K_max_soybeans,
+#         Kmin_soybeans,
+#         Kmax_soybeans,
 #         lai,
 #     )
 #     Kpet_wheat = construct_Kpet_crop(
@@ -532,8 +613,8 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
 #         Kc_ini_wheat,
 #         Kc_mid_wheat,
 #         Kc_end_wheat,
-#         K_min_wheat,
-#         K_max_wheat,
+#         Kmin_wheat,
+#         Kmax_wheat,
 #         lai,
 #     )
 

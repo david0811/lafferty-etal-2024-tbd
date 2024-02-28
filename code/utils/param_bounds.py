@@ -1,93 +1,24 @@
 import jax.numpy as jnp
 
-### Parameter bounds
+#################
 # awCap
+#################
 awCap_scalar_lower, awCap_scalar_upper = (
     jnp.log(0.5),
     jnp.log(5.0),
 )  # Central 1.
-awCap_claycoef_lower, awCap_claycoef_upper = (
-    jnp.log(10),
-    jnp.log(500.0),
-)  # Central 100
-awCap_sandcoef_lower, awCap_sandcoef_upper = (
-    jnp.log(10),
-    jnp.log(500.0),
-)  # Central 100
-awCap_siltcoef_lower, awCap_siltcoef_upper = (
-    jnp.log(10),
-    jnp.log(500.0),
-)  # Central 100
 
-awCap_sand_lower, awCap_sand_upper = jnp.log(10), jnp.log(1000)
-awCap_loamy_sand_lower, awCap_loamy_sand_upper = jnp.log(10), jnp.log(1000)
-awCap_sandy_loam_lower, awCap_sandy_loam_upper = jnp.log(10), jnp.log(1000)
-awCap_silt_loam_lower, awCap_silt_loam_upper = jnp.log(10), jnp.log(1000)
-awCap_silt_lower, awCap_silt_upper = jnp.log(10), jnp.log(1000)
-awCap_loam_lower, awCap_loam_upper = jnp.log(10), jnp.log(1000)
-awCap_sandy_clay_loam_lower, awCap_sandy_clay_loam_upper = (
-    jnp.log(10),
-    jnp.log(1000),
-)
-awCap_silty_clay_loam_lower, awCap_silty_clay_loam_upper = (
-    jnp.log(10),
-    jnp.log(1000),
-)
-awCap_clay_loam_lower, awCap_clay_loam_upper = jnp.log(10), jnp.log(1000)
-awCap_sandy_clay_lower, awCap_sandy_clay_upper = jnp.log(10), jnp.log(1000)
-awCap_silty_clay_lower, awCap_silty_clay_upper = jnp.log(10), jnp.log(1000)
-awCap_clay_lower, awCap_clay_upper = jnp.log(10), jnp.log(1000)
-
+#################
 # wiltingp
+#################
 wiltingp_scalar_lower, wiltingp_scalar_upper = (
     jnp.log(0.5),
     jnp.log(5.0),
 )  # Central 1.
-wiltingp_claycoef_lower, wiltingp_claycoef_upper = (
-    jnp.log(10),
-    jnp.log(500.0),
-)  # Central 100
-wiltingp_sandcoef_lower, wiltingp_sandcoef_upper = (
-    jnp.log(10),
-    jnp.log(500.0),
-)  # Central 100
-wiltingp_siltcoef_lower, wiltingp_siltcoef_upper = (
-    jnp.log(10),
-    jnp.log(500.0),
-)  # Central 100
 
-wiltingp_sand_lower, wiltingp_sand_upper = jnp.log(10), jnp.log(500)
-wiltingp_loamy_sand_lower, wiltingp_loamy_sand_upper = (
-    jnp.log(10),
-    jnp.log(500),
-)
-wiltingp_sandy_loam_lower, wiltingp_sandy_loam_upper = (
-    jnp.log(10),
-    jnp.log(500),
-)
-wiltingp_silt_loam_lower, wiltingp_silt_loam_upper = jnp.log(10), jnp.log(500)
-wiltingp_silt_lower, wiltingp_silt_upper = jnp.log(10), jnp.log(500)
-wiltingp_loam_lower, wiltingp_loam_upper = jnp.log(10), jnp.log(500)
-wiltingp_sandy_clay_loam_lower, wiltingp_sandy_clay_loam_upper = (
-    jnp.log(10),
-    jnp.log(500),
-)
-wiltingp_silty_clay_loam_lower, wiltingp_silty_clay_loam_upper = (
-    jnp.log(10),
-    jnp.log(500),
-)
-wiltingp_clay_loam_lower, wiltingp_clay_loam_upper = jnp.log(10), jnp.log(500)
-wiltingp_sandy_clay_lower, wiltingp_sandy_clay_upper = (
-    jnp.log(10),
-    jnp.log(500),
-)
-wiltingp_silty_clay_lower, wiltingp_silty_clay_upper = (
-    jnp.log(10),
-    jnp.log(500),
-)
-wiltingp_clay_lower, wiltingp_clay_upper = jnp.log(10), jnp.log(500)
-
+#################
 # alpha
+#################
 alpha_claycoef_lower, alpha_claycoef_upper = (
     jnp.log(0.001),
     jnp.log(100.0),
@@ -101,7 +32,9 @@ alpha_siltcoef_lower, alpha_siltcoef_upper = (
     jnp.log(100.0),
 )  # Central 0.5
 
+#####################
 # betaHBV
+#####################
 betaHBV_claycoef_lower, betaHBV_claycoef_upper = (
     jnp.log(0.001),
     jnp.log(100.0),
@@ -119,11 +52,15 @@ betaHBV_elevcoef_lower, betaHBV_elevcoef_upper = (
     jnp.log(100.0),
 )  # Central 0.5
 
+#######################
+# Crops
+#######################
 # Corn
 GS_start_corn_lower, GS_start_corn_upper = (
     jnp.log(60),
     jnp.log(152),
-)  # March 1st, June 1st
+    # March 1st
+)
 GS_end_corn_lower, GS_end_corn_upper = (
     jnp.log(244),
     jnp.log(334),
@@ -152,14 +89,27 @@ Kc_end_corn_lower, Kc_end_corn_upper = (
     jnp.log(0.2),
     jnp.log(0.6),
 )  # central 0.4
-K_min_corn_lower, K_min_corn_upper = jnp.log(0.1), jnp.log(0.5)  # central 0.3
-K_max_corn_lower, K_max_corn_upper = jnp.log(1.0), jnp.log(1.5)  # central 1.2
+Kmin_corn_lower, Kmin_corn_upper = (
+    jnp.log(0.1),
+    jnp.log(0.5),
+    # central 0.3
+)
+Kmax_corn_lower, Kmax_corn_upper = (
+    jnp.log(1.0),
+    jnp.log(1.5),
+    # central 1.2
+)
+c_lai_corn_lower, c_lai_corn_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
 # Cotton
 GS_start_cotton_lower, GS_start_cotton_upper = (
     jnp.log(60),
     jnp.log(152),
-)  # March 1st, June 1st
+    # March 1st
+)
 GS_end_cotton_lower, GS_end_cotton_upper = (
     jnp.log(244),
     jnp.log(334),
@@ -188,20 +138,26 @@ Kc_end_cotton_lower, Kc_end_cotton_upper = (
     jnp.log(0.4),
     jnp.log(0.8),
 )  # central 0.6
-K_min_cotton_lower, K_min_cotton_upper = (
+Kmin_cotton_lower, Kmin_cotton_upper = (
     jnp.log(0.1),
     jnp.log(0.6),
 )  # central 0.35
-K_max_cotton_lower, K_max_cotton_upper = (
+Kmax_cotton_lower, Kmax_cotton_upper = (
     jnp.log(1.0),
     jnp.log(1.5),
-)  # central 1.18
+    # central 1.18
+)
+c_lai_cotton_lower, c_lai_cotton_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
-# Rice growing season: https://www.ers.usda.gov/topics/crops/rice/rice-sector-at-a-glance/
+# Rice growing season: usda.gov/topics/crops/rice/rice-sector-at-a-glance/
 GS_start_rice_lower, GS_start_rice_upper = (
     jnp.log(60),
     jnp.log(182),
-)  # March 1st, July 1st
+    # March 1st
+)
 GS_end_rice_lower, GS_end_rice_upper = (
     jnp.log(214),
     jnp.log(334),
@@ -230,17 +186,26 @@ Kc_end_rice_lower, Kc_end_rice_upper = (
     jnp.log(0.65),
     jnp.log(0.85),
 )  # central 0.75
-K_min_rice_lower, K_min_rice_upper = (
+Kmin_rice_lower, Kmin_rice_upper = (
     jnp.log(0.65),
     jnp.log(0.85),
 )  # central 0.75
-K_max_rice_lower, K_max_rice_upper = jnp.log(1.0), jnp.log(1.4)  # central 1.2
+Kmax_rice_lower, Kmax_rice_upper = (
+    jnp.log(1.0),
+    jnp.log(1.4),
+    # central 1.2
+)
+c_lai_rice_lower, c_lai_rice_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
 # Sorghum
 GS_start_sorghum_lower, GS_start_sorghum_upper = (
     jnp.log(60),
     jnp.log(182),
-)  # March 1st, July 1st
+    # March 1st
+)
 GS_end_sorghum_lower, GS_end_sorghum_upper = (
     jnp.log(214),
     jnp.log(334),
@@ -269,20 +234,26 @@ Kc_end_sorghum_lower, Kc_end_sorghum_upper = (
     jnp.log(0.35),
     jnp.log(0.75),
 )  # central 0.55
-K_min_sorghum_lower, K_min_sorghum_upper = (
+Kmin_sorghum_lower, Kmin_sorghum_upper = (
     jnp.log(0.1),
     jnp.log(0.5),
 )  # central 0.3
-K_max_sorghum_lower, K_max_sorghum_upper = (
+Kmax_sorghum_lower, Kmax_sorghum_upper = (
     jnp.log(1.0),
     jnp.log(1.2),
-)  # central 1.1
+    # central 1.1
+)
+c_lai_sorghum_lower, c_lai_sorghum_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
 # Soybeans
 GS_start_soybeans_lower, GS_start_soybeans_upper = (
     jnp.log(60),
     jnp.log(182),
-)  # March 1st, July 1st
+    # March 1st
+)
 GS_end_soybeans_lower, GS_end_soybeans_upper = (
     jnp.log(244),
     jnp.log(334),
@@ -311,20 +282,26 @@ Kc_end_soybeans_lower, Kc_end_soybeans_upper = (
     jnp.log(0.3),
     jnp.log(0.7),
 )  # central 0.5
-K_min_soybeans_lower, K_min_soybeans_upper = (
+Kmin_soybeans_lower, Kmin_soybeans_upper = (
     jnp.log(0.2),
     jnp.log(0.6),
 )  # central 0.4
-K_max_soybeans_lower, K_max_soybeans_upper = (
+Kmax_soybeans_lower, Kmax_soybeans_upper = (
     jnp.log(1.0),
     jnp.log(1.3),
-)  # central 1.15
+    # central 1.15
+)
+c_lai_soybeans_lower, c_lai_soybeans_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
 # Assume spring wheat
 GS_start_wheat_lower, GS_start_wheat_upper = (
     jnp.log(60),
     jnp.log(152),
-)  # March 1st, June 1st
+    # March 1st
+)
 GS_end_wheat_lower, GS_end_wheat_upper = (
     jnp.log(214),
     jnp.log(274),
@@ -353,16 +330,23 @@ Kc_end_wheat_lower, Kc_end_wheat_upper = (
     jnp.log(0.1),
     jnp.log(0.5),
 )  # central 0.3
-K_min_wheat_lower, K_min_wheat_upper = (
+Kmin_wheat_lower, Kmin_wheat_upper = (
     jnp.log(0.2),
     jnp.log(0.6),
 )  # central 0.4
-K_max_wheat_lower, K_max_wheat_upper = (
+Kmax_wheat_lower, Kmax_wheat_upper = (
     jnp.log(1.0),
     jnp.log(1.3),
-)  # central 1.15
-
+    # central 1.15
+)
+c_lai_wheat_lower, c_lai_wheat_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+###################################
 # Other land cateogories
+####################################
+# Other cropland
 Kmin_cropland_other_lower, Kmin_cropland_other_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -371,6 +355,12 @@ Kmax_cropland_other_lower, Kmax_cropland_other_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
+c_lai_cropland_other_lower, c_lai_cropland_other_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Evergreen needleleaf
 Kmin_evergreen_needleleaf_lower, Kmin_evergreen_needleleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -379,6 +369,12 @@ Kmax_evergreen_needleleaf_lower, Kmax_evergreen_needleleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
+c_lai_evergreen_needleleaf_lower, c_lai_evergreen_needleleaf_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Evergreen broadleaf
 Kmin_evergreen_broadleaf_lower, Kmin_evergreen_broadleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -387,6 +383,12 @@ Kmax_evergreen_broadleaf_lower, Kmax_evergreen_broadleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
+c_lai_evergreen_broadleaf_lower, c_lai_evergreen_broadleaf_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Deciduous needleleaf
 Kmin_deciduous_needleleaf_lower, Kmin_deciduous_needleleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -395,6 +397,12 @@ Kmax_deciduous_needleleaf_lower, Kmax_deciduous_needleleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
+c_lai_deciduous_needleleaf_lower, c_lai_deciduous_needleleaf_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Deciduous broadleaf
 Kmin_deciduous_broadleaf_lower, Kmin_deciduous_broadleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -403,10 +411,40 @@ Kmax_deciduous_broadleaf_lower, Kmax_deciduous_broadleaf_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
-Kmin_mixed_forest_lower, Kmin_mixed_forest_upper = jnp.log(0.1), jnp.log(2.0)
-Kmax_mixed_forest_lower, Kmax_mixed_forest_upper = jnp.log(0.1), jnp.log(2.0)
-Kmin_woodland_lower, Kmin_woodland_upper = jnp.log(0.1), jnp.log(2.0)
-Kmax_woodland_lower, Kmax_woodland_upper = jnp.log(0.1), jnp.log(2.0)
+c_lai_deciduous_broadleaf_lower, c_lai_deciduous_broadleaf_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Mixed forest
+Kmin_mixed_forest_lower, Kmin_mixed_forest_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+Kmax_mixed_forest_lower, Kmax_mixed_forest_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+c_lai_mixed_forest_lower, c_lai_mixed_forest_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Woodland
+Kmin_woodland_lower, Kmin_woodland_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+Kmax_woodland_lower, Kmax_woodland_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+c_lai_woodland_lower, c_lai_woodland_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Wooded grassland
 Kmin_wooded_grassland_lower, Kmin_wooded_grassland_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -415,14 +453,26 @@ Kmax_wooded_grassland_lower, Kmax_wooded_grassland_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
-Kmin_closed_shurbland_lower, Kmin_closed_shurbland_upper = (
+c_lai_wooded_grassland_lower, c_lai_wooded_grassland_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Closed shrubland
+Kmin_closed_shrubland_lower, Kmin_closed_shrubland_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
-Kmax_closed_shurbland_lower, Kmax_closed_shurbland_upper = (
+Kmax_closed_shrubland_lower, Kmax_closed_shrubland_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
+c_lai_closed_shrubland_lower, c_lai_closed_shrubland_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Open shrubland
 Kmin_open_shrubland_lower, Kmin_open_shrubland_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
@@ -431,14 +481,56 @@ Kmax_open_shrubland_lower, Kmax_open_shrubland_upper = (
     jnp.log(0.1),
     jnp.log(2.0),
 )
-Kmin_grassland_lower, Kmin_grassland_upper = jnp.log(0.1), jnp.log(2.0)
-Kmax_grassland_lower, Kmax_grassland_upper = jnp.log(0.1), jnp.log(2.0)
-Kmin_barren_lower, Kmin_barren_upper = jnp.log(0.1), jnp.log(2.0)
-Kmax_barren_lower, Kmax_barren_upper = jnp.log(0.1), jnp.log(2.0)
-Kmin_urban_lower, Kmin_urban_upper = jnp.log(0.1), jnp.log(2.0)
-Kmax_urban_lower, Kmax_urban_upper = jnp.log(0.1), jnp.log(2.0)
+c_lai_open_shrubland_lower, c_lai_open_shrubland_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
+# Grassland
+Kmin_grassland_lower, Kmin_grassland_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+Kmax_grassland_lower, Kmax_grassland_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+c_lai_grassland_lower, c_lai_grassland_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
 
+# Barren
+Kmin_barren_lower, Kmin_barren_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+Kmax_barren_lower, Kmax_barren_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+c_lai_barren_lower, c_lai_barren_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+# Urban
+Kmin_urban_lower, Kmin_urban_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+Kmax_urban_lower, Kmax_urban_upper = (
+    jnp.log(0.1),
+    jnp.log(2.0),
+)
+c_lai_urban_lower, c_lai_urban_upper = (
+    jnp.log(0.1),
+    jnp.log(1.0),
+)
+
+################
+# Final
+################
 params_lower = jnp.array(
     [
         awCap_scalar_lower,
@@ -458,8 +550,9 @@ params_lower = jnp.array(
         Kc_ini_corn_lower,
         Kc_mid_corn_lower,
         Kc_end_corn_lower,
-        K_min_corn_lower,
-        K_max_corn_lower,
+        Kmin_corn_lower,
+        Kmax_corn_lower,
+        c_lai_corn_lower,
         GS_start_cotton_lower,
         GS_end_cotton_lower,
         L_ini_cotton_lower,
@@ -468,8 +561,9 @@ params_lower = jnp.array(
         Kc_ini_cotton_lower,
         Kc_mid_cotton_lower,
         Kc_end_cotton_lower,
-        K_min_cotton_lower,
-        K_max_cotton_lower,
+        Kmin_cotton_lower,
+        Kmax_cotton_lower,
+        c_lai_cotton_lower,
         GS_start_rice_lower,
         GS_end_rice_lower,
         L_ini_rice_lower,
@@ -478,8 +572,9 @@ params_lower = jnp.array(
         Kc_ini_rice_lower,
         Kc_mid_rice_lower,
         Kc_end_rice_lower,
-        K_min_rice_lower,
-        K_max_rice_lower,
+        Kmin_rice_lower,
+        Kmax_rice_lower,
+        c_lai_rice_lower,
         GS_start_sorghum_lower,
         GS_end_sorghum_lower,
         L_ini_sorghum_lower,
@@ -488,8 +583,9 @@ params_lower = jnp.array(
         Kc_ini_sorghum_lower,
         Kc_mid_sorghum_lower,
         Kc_end_sorghum_lower,
-        K_min_sorghum_lower,
-        K_max_sorghum_lower,
+        Kmin_sorghum_lower,
+        Kmax_sorghum_lower,
+        c_lai_sorghum_lower,
         GS_start_soybeans_lower,
         GS_end_soybeans_lower,
         L_ini_soybeans_lower,
@@ -498,8 +594,9 @@ params_lower = jnp.array(
         Kc_ini_soybeans_lower,
         Kc_mid_soybeans_lower,
         Kc_end_soybeans_lower,
-        K_min_soybeans_lower,
-        K_max_soybeans_lower,
+        Kmin_soybeans_lower,
+        Kmax_soybeans_lower,
+        c_lai_soybeans_lower,
         GS_start_wheat_lower,
         GS_end_wheat_lower,
         L_ini_wheat_lower,
@@ -508,34 +605,48 @@ params_lower = jnp.array(
         Kc_ini_wheat_lower,
         Kc_mid_wheat_lower,
         Kc_end_wheat_lower,
-        K_min_wheat_lower,
-        K_max_wheat_lower,
+        Kmin_wheat_lower,
+        Kmax_wheat_lower,
+        c_lai_wheat_lower,
         Kmin_cropland_other_lower,
         Kmax_cropland_other_lower,
+        c_lai_cropland_other_lower,
         Kmin_evergreen_needleleaf_lower,
         Kmax_evergreen_needleleaf_lower,
+        c_lai_evergreen_needleleaf_lower,
         Kmin_evergreen_broadleaf_lower,
         Kmax_evergreen_broadleaf_lower,
+        c_lai_evergreen_broadleaf_lower,
         Kmin_deciduous_needleleaf_lower,
         Kmax_deciduous_needleleaf_lower,
+        c_lai_deciduous_needleleaf_lower,
         Kmin_deciduous_broadleaf_lower,
         Kmax_deciduous_broadleaf_lower,
+        c_lai_deciduous_broadleaf_lower,
         Kmin_mixed_forest_lower,
         Kmax_mixed_forest_lower,
+        c_lai_mixed_forest_lower,
         Kmin_woodland_lower,
         Kmax_woodland_lower,
+        c_lai_woodland_lower,
         Kmin_wooded_grassland_lower,
         Kmax_wooded_grassland_lower,
-        Kmin_closed_shurbland_lower,
-        Kmax_closed_shurbland_lower,
+        c_lai_wooded_grassland_lower,
+        Kmin_closed_shrubland_lower,
+        Kmax_closed_shrubland_lower,
+        c_lai_closed_shrubland_lower,
         Kmin_open_shrubland_lower,
         Kmax_open_shrubland_lower,
+        c_lai_open_shrubland_lower,
         Kmin_grassland_lower,
         Kmax_grassland_lower,
+        c_lai_grassland_lower,
         Kmin_barren_lower,
         Kmax_barren_lower,
+        c_lai_barren_lower,
         Kmin_urban_lower,
         Kmax_urban_lower,
+        c_lai_urban_lower,
     ]
 )
 
@@ -559,8 +670,9 @@ params_upper = jnp.array(
         Kc_ini_corn_upper,
         Kc_mid_corn_upper,
         Kc_end_corn_upper,
-        K_min_corn_upper,
-        K_max_corn_upper,
+        Kmin_corn_upper,
+        Kmax_corn_upper,
+        c_lai_corn_upper,
         GS_start_cotton_upper,
         GS_end_cotton_upper,
         L_ini_cotton_upper,
@@ -569,8 +681,9 @@ params_upper = jnp.array(
         Kc_ini_cotton_upper,
         Kc_mid_cotton_upper,
         Kc_end_cotton_upper,
-        K_min_cotton_upper,
-        K_max_cotton_upper,
+        Kmin_cotton_upper,
+        Kmax_cotton_upper,
+        c_lai_cotton_upper,
         GS_start_rice_upper,
         GS_end_rice_upper,
         L_ini_rice_upper,
@@ -579,8 +692,9 @@ params_upper = jnp.array(
         Kc_ini_rice_upper,
         Kc_mid_rice_upper,
         Kc_end_rice_upper,
-        K_min_rice_upper,
-        K_max_rice_upper,
+        Kmin_rice_upper,
+        Kmax_rice_upper,
+        c_lai_rice_upper,
         GS_start_sorghum_upper,
         GS_end_sorghum_upper,
         L_ini_sorghum_upper,
@@ -589,8 +703,9 @@ params_upper = jnp.array(
         Kc_ini_sorghum_upper,
         Kc_mid_sorghum_upper,
         Kc_end_sorghum_upper,
-        K_min_sorghum_upper,
-        K_max_sorghum_upper,
+        Kmin_sorghum_upper,
+        Kmax_sorghum_upper,
+        c_lai_sorghum_upper,
         GS_start_soybeans_upper,
         GS_end_soybeans_upper,
         L_ini_soybeans_upper,
@@ -599,8 +714,9 @@ params_upper = jnp.array(
         Kc_ini_soybeans_upper,
         Kc_mid_soybeans_upper,
         Kc_end_soybeans_upper,
-        K_min_soybeans_upper,
-        K_max_soybeans_upper,
+        Kmin_soybeans_upper,
+        Kmax_soybeans_upper,
+        c_lai_soybeans_upper,
         GS_start_wheat_upper,
         GS_end_wheat_upper,
         L_ini_wheat_upper,
@@ -609,39 +725,54 @@ params_upper = jnp.array(
         Kc_ini_wheat_upper,
         Kc_mid_wheat_upper,
         Kc_end_wheat_upper,
-        K_min_wheat_upper,
-        K_max_wheat_upper,
+        Kmin_wheat_upper,
+        Kmax_wheat_upper,
+        c_lai_wheat_upper,
         Kmin_cropland_other_upper,
         Kmax_cropland_other_upper,
+        c_lai_cropland_other_upper,
         Kmin_evergreen_needleleaf_upper,
         Kmax_evergreen_needleleaf_upper,
+        c_lai_evergreen_needleleaf_upper,
         Kmin_evergreen_broadleaf_upper,
         Kmax_evergreen_broadleaf_upper,
+        c_lai_evergreen_broadleaf_upper,
         Kmin_deciduous_needleleaf_upper,
         Kmax_deciduous_needleleaf_upper,
+        c_lai_deciduous_needleleaf_upper,
         Kmin_deciduous_broadleaf_upper,
         Kmax_deciduous_broadleaf_upper,
+        c_lai_deciduous_broadleaf_upper,
         Kmin_mixed_forest_upper,
         Kmax_mixed_forest_upper,
+        c_lai_mixed_forest_upper,
         Kmin_woodland_upper,
         Kmax_woodland_upper,
+        c_lai_woodland_upper,
         Kmin_wooded_grassland_upper,
         Kmax_wooded_grassland_upper,
-        Kmin_closed_shurbland_upper,
-        Kmax_closed_shurbland_upper,
+        c_lai_wooded_grassland_upper,
+        Kmin_closed_shrubland_upper,
+        Kmax_closed_shrubland_upper,
+        c_lai_closed_shrubland_upper,
         Kmin_open_shrubland_upper,
         Kmax_open_shrubland_upper,
+        c_lai_open_shrubland_upper,
         Kmin_grassland_upper,
         Kmax_grassland_upper,
+        c_lai_grassland_upper,
         Kmin_barren_upper,
         Kmax_barren_upper,
+        c_lai_barren_upper,
         Kmin_urban_upper,
         Kmax_urban_upper,
+        c_lai_urban_upper,
     ]
 )
 
 
-# params_vic_lower = jnp.array(
+# params_vic_lower = (
+# jnp.array(
 #     [
 #         awCap_sand_lower,
 #         awCap_loamy_sand_lower,
@@ -688,8 +819,8 @@ params_upper = jnp.array(
 #         Kc_ini_corn_lower,
 #         Kc_mid_corn_lower,
 #         Kc_end_corn_lower,
-#         K_min_corn_lower,
-#         K_max_corn_lower,
+#         Kmin_corn_lower,
+#         Kmax_corn_lower,
 #         GS_start_cotton_lower,
 #         GS_end_cotton_lower,
 #         L_ini_cotton_lower,
@@ -698,8 +829,8 @@ params_upper = jnp.array(
 #         Kc_ini_cotton_lower,
 #         Kc_mid_cotton_lower,
 #         Kc_end_cotton_lower,
-#         K_min_cotton_lower,
-#         K_max_cotton_lower,
+#         Kmin_cotton_lower,
+#         Kmax_cotton_lower,
 #         GS_start_rice_lower,
 #         GS_end_rice_lower,
 #         L_ini_rice_lower,
@@ -708,8 +839,8 @@ params_upper = jnp.array(
 #         Kc_ini_rice_lower,
 #         Kc_mid_rice_lower,
 #         Kc_end_rice_lower,
-#         K_min_rice_lower,
-#         K_max_rice_lower,
+#         Kmin_rice_lower,
+#         Kmax_rice_lower,
 #         GS_start_sorghum_lower,
 #         GS_end_sorghum_lower,
 #         L_ini_sorghum_lower,
@@ -718,8 +849,8 @@ params_upper = jnp.array(
 #         Kc_ini_sorghum_lower,
 #         Kc_mid_sorghum_lower,
 #         Kc_end_sorghum_lower,
-#         K_min_sorghum_lower,
-#         K_max_sorghum_lower,
+#         Kmin_sorghum_lower,
+#         Kmax_sorghum_lower,
 #         GS_start_soybeans_lower,
 #         GS_end_soybeans_lower,
 #         L_ini_soybeans_lower,
@@ -728,8 +859,8 @@ params_upper = jnp.array(
 #         Kc_ini_soybeans_lower,
 #         Kc_mid_soybeans_lower,
 #         Kc_end_soybeans_lower,
-#         K_min_soybeans_lower,
-#         K_max_soybeans_lower,
+#         Kmin_soybeans_lower,
+#         Kmax_soybeans_lower,
 #         GS_start_wheat_lower,
 #         GS_end_wheat_lower,
 #         L_ini_wheat_lower,
@@ -738,12 +869,13 @@ params_upper = jnp.array(
 #         Kc_ini_wheat_lower,
 #         Kc_mid_wheat_lower,
 #         Kc_end_wheat_lower,
-#         K_min_wheat_lower,
-#         K_max_wheat_lower,
+#         Kmin_wheat_lower,
+#         Kmax_wheat_lower,
 #     ]
 # )
 
-# params_vic_upper = jnp.array(
+# params_vic_upper = (
+# jnp.array(
 #     [
 #         awCap_sand_upper,
 #         awCap_loamy_sand_upper,
@@ -790,8 +922,8 @@ params_upper = jnp.array(
 #         Kc_ini_corn_upper,
 #         Kc_mid_corn_upper,
 #         Kc_end_corn_upper,
-#         K_min_corn_upper,
-#         K_max_corn_upper,
+#         Kmin_corn_upper,
+#         Kmax_corn_upper,
 #         GS_start_cotton_upper,
 #         GS_end_cotton_upper,
 #         L_ini_cotton_upper,
@@ -800,8 +932,8 @@ params_upper = jnp.array(
 #         Kc_ini_cotton_upper,
 #         Kc_mid_cotton_upper,
 #         Kc_end_cotton_upper,
-#         K_min_cotton_upper,
-#         K_max_cotton_upper,
+#         Kmin_cotton_upper,
+#         Kmax_cotton_upper,
 #         GS_start_rice_upper,
 #         GS_end_rice_upper,
 #         L_ini_rice_upper,
@@ -810,8 +942,8 @@ params_upper = jnp.array(
 #         Kc_ini_rice_upper,
 #         Kc_mid_rice_upper,
 #         Kc_end_rice_upper,
-#         K_min_rice_upper,
-#         K_max_rice_upper,
+#         Kmin_rice_upper,
+#         Kmax_rice_upper,
 #         GS_start_sorghum_upper,
 #         GS_end_sorghum_upper,
 #         L_ini_sorghum_upper,
@@ -820,8 +952,8 @@ params_upper = jnp.array(
 #         Kc_ini_sorghum_upper,
 #         Kc_mid_sorghum_upper,
 #         Kc_end_sorghum_upper,
-#         K_min_sorghum_upper,
-#         K_max_sorghum_upper,
+#         Kmin_sorghum_upper,
+#         Kmax_sorghum_upper,
 #         GS_start_soybeans_upper,
 #         GS_end_soybeans_upper,
 #         L_ini_soybeans_upper,
@@ -830,8 +962,8 @@ params_upper = jnp.array(
 #         Kc_ini_soybeans_upper,
 #         Kc_mid_soybeans_upper,
 #         Kc_end_soybeans_upper,
-#         K_min_soybeans_upper,
-#         K_max_soybeans_upper,
+#         Kmin_soybeans_upper,
+#         Kmax_soybeans_upper,
 #         GS_start_wheat_upper,
 #         GS_end_wheat_upper,
 #         L_ini_wheat_upper,
@@ -840,7 +972,132 @@ params_upper = jnp.array(
 #         Kc_ini_wheat_upper,
 #         Kc_mid_wheat_upper,
 #         Kc_end_wheat_upper,
-#         K_min_wheat_upper,
-#         K_max_wheat_upper,
+#         Kmin_wheat_upper,
+#         Kmax_wheat_upper,
 #     ]
 # )
+
+
+awCap_claycoef_lower, awCap_claycoef_upper = (
+    jnp.log(10),
+    jnp.log(500.0),
+)  # Central 100
+awCap_sandcoef_lower, awCap_sandcoef_upper = (
+    jnp.log(10),
+    jnp.log(500.0),
+)  # Central 100
+awCap_siltcoef_lower, awCap_siltcoef_upper = (
+    jnp.log(10),
+    jnp.log(500.0),
+)  # Central 100
+
+awCap_sand_lower, awCap_sand_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_loamy_sand_lower, awCap_loamy_sand_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_sandy_loam_lower, awCap_sandy_loam_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_silt_loam_lower, awCap_silt_loam_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_silt_lower, awCap_silt_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_loam_lower, awCap_loam_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_sandy_clay_loam_lower, awCap_sandy_clay_loam_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_silty_clay_loam_lower, awCap_silty_clay_loam_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_clay_loam_lower, awCap_clay_loam_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_sandy_clay_lower, awCap_sandy_clay_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_silty_clay_lower, awCap_silty_clay_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+awCap_clay_lower, awCap_clay_upper = (
+    jnp.log(10),
+    jnp.log(1000),
+)
+
+wiltingp_claycoef_lower, wiltingp_claycoef_upper = (
+    jnp.log(10),
+    jnp.log(500.0),
+)  # Central 100
+wiltingp_sandcoef_lower, wiltingp_sandcoef_upper = (
+    jnp.log(10),
+    jnp.log(500.0),
+)  # Central 100
+wiltingp_siltcoef_lower, wiltingp_siltcoef_upper = (
+    jnp.log(10),
+    jnp.log(500.0),
+)  # Central 100
+
+wiltingp_sand_lower, wiltingp_sand_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_loamy_sand_lower, wiltingp_loamy_sand_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_sandy_loam_lower, wiltingp_sandy_loam_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_silt_loam_lower, wiltingp_silt_loam_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_silt_lower, wiltingp_silt_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_loam_lower, wiltingp_loam_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_sandy_clay_loam_lower, wiltingp_sandy_clay_loam_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_silty_clay_loam_lower, wiltingp_silty_clay_loam_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_clay_loam_lower, wiltingp_clay_loam_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_sandy_clay_lower, wiltingp_sandy_clay_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_silty_clay_lower, wiltingp_silty_clay_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
+wiltingp_clay_lower, wiltingp_clay_upper = (
+    jnp.log(10),
+    jnp.log(500),
+)
