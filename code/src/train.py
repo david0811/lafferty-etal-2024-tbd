@@ -23,8 +23,8 @@ def train_and_store(
     params_upper,
     param_names,
     n_epochs_min=10,
-    n_epochs_max=50,
-    patience=10,
+    n_epochs_max=20,
+    patience=2,
     batch_size=2**5,
     opt="adam",
     learning_rate=1e-3,
@@ -305,7 +305,7 @@ def train_and_store(
             f"{str(epoch + 1)} {error_fn_name} {train_loss_out[epoch]:.4f} {pred_loss_out[epoch]:.4f} {reg_loss_out[epoch]:.4f} {val_loss_out[epoch]:.4f} {' '.join(theta_str)}\n"
         )
         # Print every 5
-        if (epoch + 1) % 1 == 0:
+        if (epoch + 1) % 5 == 0:
             print(
                 f"Epoch {str(epoch + 1)} total loss: {train_loss_out[epoch]:.4f}, pred loss: {pred_loss_out[epoch]:.4f}, reg_loss: {reg_loss_out[epoch]:.4f}, val loss: {val_loss_out[epoch]:.4f}"
             )

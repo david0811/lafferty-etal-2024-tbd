@@ -123,7 +123,6 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
         Kmin_wheat,
         Kmax_wheat,
         c_lai_wheat,
-        c_lai_wheat,
         Kmin_cropland_other,
         Kmax_cropland_other,
         c_lai_cropland_other,
