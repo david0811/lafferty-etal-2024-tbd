@@ -77,7 +77,7 @@ def update_state(state, forcing, params):
     ################
     # Precipitation is assumed to be entirely snow/rain
     # if temperature is below/above threshold (Ts)
-    is_snowfall = tas < -Ts
+    is_snowfall = tas < Ts
 
     Ps = (is_snowfall * prcp) + ((1 - is_snowfall) * 0.0)
     Pa = (is_snowfall * 0.0) + ((1 - is_snowfall) * prcp)

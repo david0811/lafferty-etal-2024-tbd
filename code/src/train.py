@@ -5,7 +5,7 @@ import jax.numpy as jnp
 import numpy as np
 import optax
 from src.prediction import make_prediction
-from src.read_inputs import read_inputs
+from src.read_inputs import read_hindcast_inputs
 from utils.global_paths import project_data_path
 from utils.initial_params import (
     constants,
@@ -24,7 +24,7 @@ def train_and_store(
     param_names,
     n_epochs_min=10,
     n_epochs_max=20,
-    patience=2,
+    patience=3,
     batch_size=2**5,
     opt="adam",
     learning_rate=1e-3,
@@ -85,7 +85,7 @@ def train_and_store(
     # Setup
     ###########################
     # Read data
-    ys, x_forcing_nt, x_forcing_nyrs, x_maps = read_inputs(
+    ys, x_forcing_nt, x_forcing_nyrs, x_maps = read_hindcast_inputs(
         subset_name, obs_name, True
     )
     N = ys.shape[0]
@@ -112,6 +112,9 @@ def train_and_store(
             x_forcing_nyrs,
             x_maps,
         )
+
+    # Memory management
+    del ys, x_forcing_nt, x_forcing_nyrs, x_maps
 
     # Define mini-batch hyper-parameters
     N_train = ys_train.shape[0]
@@ -233,10 +236,11 @@ def train_and_store(
             batch_loss[idx] = loss
             # Break if theta steps outside bounds
             if (theta < params_lower).any() or (theta > params_upper).any():
-                print("Found invalid parameter... re-initializaing")
+                # print("Found invalid parameter... re-initializaing")
+                f.write("Invalid-parameter\n")
                 theta = initial_theta
                 invalid_theta_count += 1
-                if invalid_theta_count > 5:
+                if invalid_theta_count > 2:
                     f.close()
                     return (
                         train_loss_out,
@@ -251,7 +255,8 @@ def train_and_store(
                     )
             # Break if theta goes to NaN
             if jnp.isnan(theta).any():
-                print("Found NaN parameter... stopping")
+                # print("Found NaN parameter... stopping")
+                f.write("Found NaN parameter... stopping")
                 f.close()
                 return (
                     train_loss_out,
@@ -305,10 +310,10 @@ def train_and_store(
             f"{str(epoch + 1)} {error_fn_name} {train_loss_out[epoch]:.4f} {pred_loss_out[epoch]:.4f} {reg_loss_out[epoch]:.4f} {val_loss_out[epoch]:.4f} {' '.join(theta_str)}\n"
         )
         # Print every 5
-        if (epoch + 1) % 5 == 0:
-            print(
-                f"Epoch {str(epoch + 1)} total loss: {train_loss_out[epoch]:.4f}, pred loss: {pred_loss_out[epoch]:.4f}, reg_loss: {reg_loss_out[epoch]:.4f}, val loss: {val_loss_out[epoch]:.4f}"
-            )
+        # if (epoch + 1) % 5 == 0:
+        #     print(
+        #         f"Epoch {str(epoch + 1)} total loss: {train_loss_out[epoch]:.4f}, pred loss: {pred_loss_out[epoch]:.4f}, reg_loss: {reg_loss_out[epoch]:.4f}, val loss: {val_loss_out[epoch]:.4f}"
+        #     )
 
         # Early stopping
         if (
@@ -316,7 +321,7 @@ def train_and_store(
             & (epoch > n_epochs_min)
             & (epoch < n_epochs_max)
         ):
-            print("Early stopping!")
+            # print("Early stopping!")
             f.close()
             return (
                 train_loss_out,

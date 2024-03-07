@@ -1,3 +1,4 @@
+import jax
 import jax.numpy as jnp
 from src.water_balance_jax import (
     construct_Kpet_crop,
@@ -6,7 +7,9 @@ from src.water_balance_jax import (
 )
 
 
-# Prediction function: non-VIC
+##########################
+# Prediction function
+##########################
 def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
     # Read inputs
     tas, prcp = x_forcing_nt
@@ -389,6 +392,22 @@ def make_prediction(theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps):
     return prediction
 
 
+############################
+# Prediction function vmap
+############################
+make_prediction_vmap = jax.jit(
+    jax.vmap(make_prediction, in_axes=(None, None, 0, 0, 0), out_axes=0)
+)
+
+
+"""
+
+
+
+OLD
+
+
+"""
 # # Prediction functions: VIC
 # def make_prediction_vic(
 #     theta, constants, x_forcing_nt, x_forcing_nyrs, x_maps
