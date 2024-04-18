@@ -196,7 +196,7 @@ def wbm_sobol(
     # Set up list
     if eval == "SMAP":
         metrics = [out_mean, out_sd, out_range, out_rmse, out_ubrmse]
-        metric_names = ["mean", "sd", "range", "rmse", "ubrmse"]
+        metric_names = ["mean", "sd", "range", "rmse_SMAP", "ubrmse_SMAP"]
     elif eval == "NLDAS":
         metrics = (
             [out_mean, out_sd, out_range]

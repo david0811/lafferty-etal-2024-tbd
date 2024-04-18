@@ -5,7 +5,7 @@ import jax.numpy as jnp
 #################
 awCap_scalar_lower, awCap_scalar_upper = (
     jnp.log(0.1),
-    jnp.log(5.0),
+    jnp.log(3.0),
 )  # Central 1.
 
 #################
@@ -13,7 +13,7 @@ awCap_scalar_lower, awCap_scalar_upper = (
 #################
 wiltingp_scalar_lower, wiltingp_scalar_upper = (
     jnp.log(0.1),
-    jnp.log(5.0),
+    jnp.log(3.0),
 )  # Central 1.
 
 #################

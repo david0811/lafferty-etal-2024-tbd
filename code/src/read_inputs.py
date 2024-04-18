@@ -62,9 +62,8 @@ def read_projection_inputs(subset_name, obs_name, projection_id, remove_nans):
 
     ######################
     # Read and extract projection inputs
-    ds = xr.open_zarr(
-        f"{project_data_path}/projections/{subset_name}/forcing/{projection_id}.zarr"
-    )
+    ds = xr.open_dataset(f"{project_data_path}/projections/{subset_name}/forcing/{projection_id}.zarr",
+                        engine='zarr')
     ds = ds.convert_calendar(calendar="noleap", dim="time")
     ds = ds.sel(
         time=slice("2023-01-01", "2100-12-31")

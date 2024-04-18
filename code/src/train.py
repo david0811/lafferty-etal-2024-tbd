@@ -23,8 +23,8 @@ def train_and_store(
     params_upper,
     param_names,
     n_epochs_min=10,
-    n_epochs_max=20,
-    patience=3,
+    n_epochs_max=30,
+    patience=5,
     batch_size=2**5,
     opt="adam",
     learning_rate=1e-3,
@@ -144,19 +144,20 @@ def train_and_store(
     val_loss_out = np.empty(n_epochs_max + 1)
 
     # Early stopping
-    best_loss = float("inf")
+    best_loss = jnp.inf
 
     #####################
     # Initial results
     #####################
-    ## Where to store results
     datetime_str = datetime.now().strftime("%Y%m%d-%H%M")
-    # used to discern different starting values
+
+    # Used to discern different starting values
     random_str = str(abs(theta[0])).replace(".", "")[:5]
     training_name = f"{error_fn_name}_{random_str}r"
     if len(val_inds) > 0:
         training_name += f"_{str(val_inds[0])}val"
 
+    # Write initial results
     out_file_path = f"{project_data_path}/WBM/calibration/{subset_name}/{obs_name}/training_res/{training_name}_{datetime_str}.txt"
     f = open(out_file_path, "w")
     f.write(
@@ -185,7 +186,7 @@ def train_and_store(
             )
         )
     else:
-        val_loss_init = np.nan
+        val_loss_init = -1.0
 
     reg_loss_init = reg_loss(theta, initial_params, params_lower, params_upper)
     train_loss_init = pred_loss_init + (reg_const * reg_loss_init)
@@ -255,8 +256,8 @@ def train_and_store(
                     )
             # Break if theta goes to NaN
             if jnp.isnan(theta).any():
-                # print("Found NaN parameter... stopping")
-                f.write("Found NaN parameter... stopping")
+                # print("Found NaN parameter")
+                f.write("NaN-parameter")
                 f.close()
                 return (
                     train_loss_out,
@@ -274,9 +275,10 @@ def train_and_store(
         reg_loss_out[epoch] = reg_loss(
             theta, initial_params, params_lower, params_upper
         )
-        pred_loss_out[epoch] = train_loss_out[epoch] - (
-            reg_const * reg_loss_out[epoch]
-        )
+        pred_loss = train_loss_out[epoch] - (reg_const * reg_loss_out[epoch])
+        pred_loss_out[epoch] = pred_loss
+
+        ###### Early stopping criteria
         if len(val_inds) > 0:
             val_loss = jnp.mean(
                 pred_loss_value(
@@ -289,31 +291,33 @@ def train_and_store(
                 )
             )
             val_loss_out[epoch] = val_loss
-            # Early stopping
+            # Early stopping for val loss based on binary
             if val_loss < best_loss:
                 best_loss = val_loss
                 stagnation_counter = 0
             else:
                 stagnation_counter += 1
         else:
-            val_loss_out[epoch] = jnp.nan
-            # Early stopping
-            if train_loss < best_loss:
-                best_loss = train_loss
-                stagnation_counter = 0
-            else:
-                stagnation_counter += 1
+            val_loss_out[epoch] = -1.0
+            # Early stopping for training loss based on abs pct diff
+            if epoch > 0:
+                pred_loss_prev = pred_loss_out[epoch - 1]
+                pct_diff = jnp.abs(pred_loss - pred_loss_prev) / pred_loss_prev
+                if (pred_loss < pred_loss_prev) and (pct_diff < 0.01):
+                    stagnation_counter += 1
+                else:
+                    stagnation_counter = 0
 
         # Write every epoch
         theta_str = [str(param) for param in theta]
         f.write(
             f"{str(epoch + 1)} {error_fn_name} {train_loss_out[epoch]:.4f} {pred_loss_out[epoch]:.4f} {reg_loss_out[epoch]:.4f} {val_loss_out[epoch]:.4f} {' '.join(theta_str)}\n"
         )
-        # Print every 5
-        # if (epoch + 1) % 5 == 0:
-        #     print(
-        #         f"Epoch {str(epoch + 1)} total loss: {train_loss_out[epoch]:.4f}, pred loss: {pred_loss_out[epoch]:.4f}, reg_loss: {reg_loss_out[epoch]:.4f}, val loss: {val_loss_out[epoch]:.4f}"
-        #     )
+
+        # Print
+        print(
+            f"Epoch {str(epoch + 1)} total loss: {train_loss_out[epoch]:.4f}, pred loss: {pred_loss_out[epoch]:.4f}, reg_loss: {reg_loss_out[epoch]:.4f}, val loss: {val_loss_out[epoch]:.4f}"
+        )
 
         # Early stopping
         if (

@@ -30,7 +30,7 @@ def reorganize_objs(objs, columns_axes, ideal_direction, minmaxs):
                     - objs_reorg.iloc[:, i].min(axis=0)
                 )
             else:
-                bottoms[i], tops[i] = tops[i], bottoms[i]
+                bottoms.iloc[i], tops.iloc[i] = tops.iloc[i], bottoms.iloc[i]
                 objs_reorg.iloc[:, -1] = (
                     objs_reorg.iloc[:, -1] - objs_reorg.iloc[:, -1].min(axis=0)
                 ) / (
@@ -49,7 +49,7 @@ def reorganize_objs(objs, columns_axes, ideal_direction, minmaxs):
                     - objs_reorg.iloc[:, i].min(axis=0)
                 )
             else:
-                bottoms[i], tops[i] = tops[i], bottoms[i]
+                bottoms.iloc[i], tops.iloc[i] = tops.iloc[i], bottoms.iloc[i]
                 objs_reorg.iloc[:, i] = (
                     objs_reorg.iloc[:, i].max(axis=0) - objs_reorg.iloc[:, i]
                 ) / (
@@ -248,7 +248,7 @@ def custom_parallel_coordinates(
     ### add top/bottom ranges
     for j in range(len(columns_axes)):
         ax.annotate(
-            f"{tops[j]:.2f}",
+            f"{tops.iloc[j]:.2f}",
             [j, 1.02],
             ha="center",
             va="bottom",
@@ -257,7 +257,7 @@ def custom_parallel_coordinates(
         )
         if j == len(columns_axes) - 1:
             ax.annotate(
-                f"{bottoms[j]:.2f}" + "+",
+                f"{bottoms.iloc[j]:.2f}",
                 [j, -0.02],
                 ha="center",
                 va="top",
@@ -266,7 +266,7 @@ def custom_parallel_coordinates(
             )
         else:
             ax.annotate(
-                f"{bottoms[j]:.2f}",
+                f"{bottoms.iloc[j]:.2f}",
                 [j, -0.02],
                 ha="center",
                 va="top",
@@ -314,7 +314,7 @@ def custom_parallel_coordinates(
         fontsize=fontsize,
     )
 
-    ax.set_xlim(-0.4, 4.2)
+    ax.set_xlim(-0.4, len(columns_axes) + 0.2)
     ax.set_ylim(-0.4, 1.1)
 
     for i, l in enumerate(axis_labels):
@@ -357,7 +357,7 @@ def custom_parallel_coordinates(
             handles=leg,
             loc="lower center",
             ncol=max(3, len(color_dict_categorical)),
-            bbox_to_anchor=[0.5, -0.07],
+            bbox_to_anchor=[0.5, 0.],
             frameon=False,
             fontsize=fontsize,
         )

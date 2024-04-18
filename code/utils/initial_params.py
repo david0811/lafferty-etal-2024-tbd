@@ -10,7 +10,7 @@ constants = jnp.array([Ts, Tm, Wi_init, Sp_init])
 
 ## Parameters
 # awCap
-awCap_scalar = jnp.log(0.5)
+awCap_scalar = jnp.log(1)
 # awCap_claycoef = jnp.log(100.0)
 # awCap_sandcoef = jnp.log(100.0)
 # awCap_siltcoef = jnp.log(100.0)
