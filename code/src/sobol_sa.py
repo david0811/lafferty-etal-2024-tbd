@@ -190,7 +190,8 @@ def wbm_sobol(
     ).set_samples(params)
 
     # Analyze all
-    df_out = []
+    df_out_total = []
+    df_out_second = []
 
     # Set up list
     if eval == "SMAP":
@@ -218,12 +219,24 @@ def wbm_sobol(
         sp.analyze_sobol()
         # Store
         total, first, second = sp.to_df()
+        
         df_tmp = pd.merge(total, first, left_index=True, right_index=True)
         df_tmp["metric"] = metric_name
-        df_out.append(df_tmp.reset_index().rename(columns={"index": "param"}))
+        df_out_total.append(df_tmp.reset_index().rename(columns={"index": "param"}))
+
+        second = second.reset_index().rename(columns={"index": "param"})
+        second["metric"] = metric_name
+        second['param1'] = second['param'].apply(lambda x: x[0])
+        second['param2'] = second['param'].apply(lambda x: x[1])
+        df_out_second.append(second.drop(columns = 'param'))
 
     # Save
-    df_out = pd.concat(df_out)
-    df_out.to_csv(
-        f"{project_data_path}/WBM/SA/{save_name}_res.csv", index=False
+    df_out_total = pd.concat(df_out_total)
+    df_out_second = pd.concat(df_out_second)
+
+    df_out_total.to_csv(
+        f"{project_data_path}/WBM/SA/{save_name}_res_total.csv", index=False
+    )
+    df_out_second.to_csv(
+        f"{project_data_path}/WBM/SA/{save_name}_res_2order.csv", index=False
     )
