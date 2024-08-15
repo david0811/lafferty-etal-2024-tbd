@@ -6,6 +6,7 @@ Original: https://github.com/calvinwhealton/SensitivityAnalysisPlots
 
 import numpy as np
 import itertools
+import matplotlib.pyplot as plt
 import seaborn as sns
 import math
 sns.set_style('whitegrid', {'axes_linewidth': 0, 'axes.edgecolor': 'white'})
@@ -16,9 +17,14 @@ def is_significant(value, confidence_interval, threshold="conf"):
     else:
         return value - abs(float(threshold)) > 0
         
-def grouped_radial(SAresults_total, SAresults_2order, parameters, radSc=2.0, scaling=1, widthSc=0.5, STthick=1, varNameMult=1.3, colors=None, groups=None, gpNameMult=1.5, threshold="conf"):
+def is_significant(value, confidence_interval, threshold="conf"):
+    if threshold == "conf":
+        return value - abs(confidence_interval) > 0
+    else:
+        return value - abs(float(threshold)) > 0
+        
+def grouped_radial(SAresults_total, SAresults_2order, parameters, ax, radSc=2.0, scaling=1, widthSc=0.5, STthick=1, varNameMult=1.3, colors=None, groups=None, gpNameMult=1.5, threshold="conf"):
     # Derived from https://github.com/calvinwhealton/SensitivityAnalysisPlots
-    fig, ax = plt.subplots(1, 1)
     color_map = {}
 
     # initialize parameters and colors
@@ -89,22 +95,23 @@ def grouped_radial(SAresults_total, SAresults_2order, parameters, radSc=2.0, sca
 
     # add labels
     for i, key in enumerate(parameters):
+        angle = angles[i]*360/(2*math.pi) - 90
+        rotation = angle if angle < 90 else (angle-180)
         ax.text(varNameMult*x[i], varNameMult*y[i], key, ha='center', va='center',
-                rotation=angles[i]*360/(2*math.pi) - 90,
+                rotation=rotation,
                 color=color_map[key])
 
     if groups is not None:
         for i, group in enumerate(groups.keys()):
-            print(group)
             group_angle = np.mean([angles[j] for j in range(n) if parameters[j] in groups[group]])
-
+            group_text_angle = group_angle*360/(2*math.pi) - 90
+            roation = group_text_angle if group_text_angle < 180 else (group_text_angle-180)
             ax.text(gpNameMult*radSc*math.cos(group_angle), gpNameMult*radSc*math.sin(group_angle), group, ha='center', va='center',
-                rotation=group_angle*360/(2*math.pi) - 90,
+                rotation=roation, fontweight='bold',
                 color=colors[i % len(colors)])
 
     ax.set_facecolor('white')
     ax.set_xticks([])
     ax.set_yticks([])
-    plt.axis('equal')
-    plt.axis([-2*radSc, 2*radSc, -2*radSc, 2*radSc])
-    plt.show()
+    ax.axis('equal')
+    ax.axis([-2*radSc, 2*radSc, -2*radSc, 2*radSc])
