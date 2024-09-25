@@ -1,4 +1,5 @@
 """
+September 2024: Modified by David Lafferty (rotation of group labels).
 May 2024: Modified from https://uc-ebook.org/docs/html/A2_Jupyter_Notebooks.html
 
 Original: https://github.com/calvinwhealton/SensitivityAnalysisPlots
@@ -9,14 +10,13 @@ import itertools
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
+import pandas as pd
+
+from utils.constants import location_names
+from utils.global_paths import project_code_path
+
 sns.set_style('whitegrid', {'axes_linewidth': 0, 'axes.edgecolor': 'white'})
 
-def is_significant(value, confidence_interval, threshold="conf"):
-    if threshold == "conf":
-        return value - abs(confidence_interval) > 0
-    else:
-        return value - abs(float(threshold)) > 0
-        
 def is_significant(value, confidence_interval, threshold="conf"):
     if threshold == "conf":
         return value - abs(confidence_interval) > 0
@@ -115,3 +115,100 @@ def grouped_radial(SAresults_total, SAresults_2order, parameters, ax, radSc=2.0,
     ax.set_yticks([])
     ax.axis('equal')
     ax.axis([-2*radSc, 2*radSc, -2*radSc, 2*radSc])
+
+
+def read_second_order(experiment, N, obs_name):
+    # Read total and first order
+    df_total = pd.read_csv(f'/storage/group/pches/default/users/dcl5300/wbm_soilM_crop_uc_lafferty-etal-2024-tbd_DATA/WBM/SA/{experiment}_{obs_name}_{N}_noCC_res_total.csv').set_index(['metric', 'param'])
+
+    # Read second order and add full complement (easier for plotting)
+    df_2order = pd.read_csv(f'/storage/group/pches/default/users/dcl5300/wbm_soilM_crop_uc_lafferty-etal-2024-tbd_DATA/WBM/SA/{experiment}_{obs_name}_{N}_noCC_res_2order.csv').set_index(['param1', 'param2'])
+    df_2order_swapped = pd.DataFrame(data = df_2order.values,
+                                 index = [(y, x) for x, y in df_2order.index],
+                                 columns = df_2order.columns)
+
+    df_2order = pd.concat([df_2order, df_2order_swapped]).reset_index().rename(columns = {'level_0': 'param1', 'level_1': 'param2'}).set_index(['metric', 'param1', 'param2'])
+
+    return df_total, df_2order
+
+
+def plot_second_order_all(experiment, groups, N, savefig):
+    """
+    Makes plot showing all radial SA results for all metrics for given location.
+    Only for noCC experiments.
+    """
+    df_smap_total, df_smap_2order = read_second_order(experiment, 'SMAP', N)
+    df_nldas_total, df_nldas_2order = read_second_order(experiment, 'NLDAS', N)
+    
+    # Get params
+    params = [groups[key] for key in groups.keys()]
+    params = [x for y in params for x in y]
+    
+    colors = ['black', 'gray', 'orange', 'darkgreen', 'darkblue']
+    
+    plt.rcParams["font.size"] = 8
+    
+    ###### Plot
+    fig, axs = plt.subplots(3,4, figsize=(14,12))
+    
+    # Top Row
+    grouped_radial(df_smap_total.loc['mean'], df_smap_2order.loc['mean'], params, axs[0,0],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    axs[0,0].set_title('Mean \n (SMAP forcing)', fontsize=12, y=0.9)
+    
+    grouped_radial(df_smap_total.loc['sd'], df_smap_2order.loc['sd'], params, axs[0,1],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    axs[0,1].set_title('Standard Deviation \n (SMAP forcing)', fontsize=12, y=0.9)
+    
+    grouped_radial(df_nldas_total.loc['mean'], df_nldas_2order.loc['mean'], params, axs[0,2],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    axs[0,2].set_title('Mean \n (NLDAS forcing)', fontsize=12, y=0.9)
+    
+    grouped_radial(df_nldas_total.loc['sd'], df_nldas_2order.loc['sd'], params, axs[0,3],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    axs[0,3].set_title('Standard Deviation \n (NLDAS forcing)', fontsize=12, y=0.9)
+    
+    # Middle row
+    axs[1,0].set_title('SMAP RMSE', fontsize=12, y=0.9)
+    grouped_radial(df_smap_total.loc['rmse_SMAP'], df_smap_2order.loc['rmse_SMAP'], params, axs[1,0],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    
+    for ido, obs_name in enumerate(['VIC', 'NOAH', 'MOSAIC']):
+        axs[1,1+ido].set_title(f"{obs_name} RMSE", fontsize=12, y=0.9)
+        grouped_radial(df_nldas_total.loc[f'rmse_{obs_name}'], df_nldas_2order.loc[f'rmse_{obs_name}'], params, axs[1,1+ido],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    
+    # Bottom row
+    axs[2,0].set_title('SMAP ubRMSE', fontsize=12, y=0.9)
+    grouped_radial(df_smap_total.loc['ubrmse_SMAP'], df_smap_2order.loc['ubrmse_SMAP'], params, axs[2,0],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+    
+    for ido, obs_name in enumerate(['VIC', 'NOAH', 'MOSAIC']):
+        axs[2,1+ido].set_title(f"{obs_name} ubRMSE", fontsize=12, y=0.9)
+        grouped_radial(df_nldas_total.loc[f'ubrmse_{obs_name}'], df_nldas_2order.loc[f'ubrmse_{obs_name}'], params, axs[2,1+ido],
+                   groups = groups,
+                   colors = colors,
+                   varNameMult=1.35, gpNameMult=1.55)
+
+    
+    fig.suptitle(location_names[experiment], fontweight='bold', fontsize=12)
+    
+    plt.tight_layout()
+    if savefig:
+        plt.savefig(f'{project_code_path}/figs/si/{experiment}_{N}_grouped_radial.png', dpi=600)
+    else:
+        plt.show()

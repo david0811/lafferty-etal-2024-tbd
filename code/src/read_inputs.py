@@ -7,9 +7,8 @@ from utils.global_paths import project_data_path
 
 def read_projection_inputs(subset_name, obs_name, projection_id, remove_nans):
     # For initial conditions
-    Ws_init = np.load(
-        f"{project_data_path}/WBM/calibration/{subset_name}/{obs_name}/{obs_name}_validation.npy"
-    )[:, :, -1]
+    Ws_init = np.load(f"{project_data_path}/WBM/calibration/{subset_name}/{obs_name}/{obs_name}_validation.npy")
+    Ws_init = Ws_init[:, :, 0]
 
     # Obs inputs
     npz = np.load(
@@ -65,9 +64,7 @@ def read_projection_inputs(subset_name, obs_name, projection_id, remove_nans):
     ds = xr.open_dataset(f"{project_data_path}/projections/{subset_name}/forcing/{projection_id}.zarr",
                         engine='zarr')
     ds = ds.convert_calendar(calendar="noleap", dim="time")
-    ds = ds.sel(
-        time=slice("2023-01-01", "2100-12-31")
-    )  # initial conditions are for 2022-12-31
+    ds = ds.sel(time=slice("2016-01-01", "2100-12-31"))  # initial conditions for 2016-01-01
 
     tas = np.transpose(ds["tas"].to_numpy(), (2, 1, 0))
     prcp = np.transpose(ds["pr"].to_numpy(), (2, 1, 0))
@@ -357,75 +354,3 @@ def read_hindcast_inputs(subset_name, obs_name, remove_nans):
 
     # Return
     return ys, x_forcing_nt, x_forcing_nyrs, x_maps
-
-
-#########################
-# OLD
-#####################
-# if obs_name == "VICx":
-#     awCap_frac = awCap_frac.reshape(nx * ny)
-#     wiltingp_frac = wiltingp_frac.reshape(nx * ny)
-#     sand = sand.reshape(nx * ny)
-#     loamy_sand = loamy_sand.reshape(nx * ny)
-#     sandy_loam = sandy_loam.reshape(nx * ny)
-#     silt_loam = silt_loam.reshape(nx * ny)
-#     silt = silt.reshape(nx * ny)
-#     loam = loam.reshape(nx * ny)
-#     sandy_clay_loam = sandy_clay_loam.reshape(nx * ny)
-#     silty_clay_loam = silty_clay_loam.reshape(nx * ny)
-#     clay_loam = clay_loam.reshape(nx * ny)
-#     sandy_clay = sandy_clay.reshape(nx * ny)
-#     silty_clay = silty_clay.reshape(nx * ny)
-#     clay = clay.reshape(nx * ny)
-# else:
-# if obs_name == "VICx":
-#         awCap_frac = npz["awCap_frac"]
-#         wiltingp_frac = npz["wiltingp_frac"]
-#         sand = npz["sand"]
-#         loamy_sand = npz["loamy_sand"]
-#         sandy_loam = npz["sandy_loam"]
-#         silt_loam = npz["silt_loam"]
-#         silt = npz["silt"]
-#         loam = npz["loam"]
-#         sandy_clay_loam = npz["sandy_clay_loam"]
-#         silty_clay_loam = npz["silty_clay_loam"]
-#         clay_loam = npz["clay_loam"]
-#         sandy_clay = npz["sandy_clay"]
-#         silty_clay = npz["silty_clay"]
-#         clay = npz["clay"]
-#     else:
-# all_other = all_other.reshape(nx * ny)
-# if obs_name == "VICx":
-#     x_maps = jnp.stack(
-#         [
-#             awCap_frac_in,
-#             wiltingp_frac_in,
-#             sand_in,
-#             loamy_sand_in,
-#             sandy_loam_in,
-#             silt_loam_in,
-#             silt_in,
-#             loam_in,
-#             sandy_clay_loam_in,
-#             silty_clay_loam_in,
-#             clay_loam_in,
-#             sandy_clay_in,
-#             silty_clay_in,
-#             clay_in,
-#             Ws_init_in,
-#             clayfrac_in,
-#             sandfrac_in,
-#             siltfrac_in,
-#             rootDepth_in,
-#             lats_in,
-#             elev_std_in,
-#             corn_in,
-#             cotton_in,
-#             rice_in,
-#             sorghum_in,
-#             soybeans_in,
-#             wheat_in,
-#         ],
-#         axis=1,
-#     )
-# else:
