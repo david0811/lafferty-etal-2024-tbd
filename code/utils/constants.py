@@ -3,9 +3,9 @@ location_coords = {'mclean': (40.61752192312278, -88.68366477345201),
                    'bigbend': (29.22124625856724, -103.22586554830667),
                    'smoky': (35.61832908163286, -83.66546369858804)}
 
-location_names = {'mclean': 'McLean County, Illinois', 
-                   'bigbend': 'Big Bend, Texas',
-                   'smoky': 'Smoky Mountains, Tennessee'}
+location_names = {'mclean': 'Agricultural land: McLean County, Illinois',
+                  'smoky': 'Forested land: Smoky Mountains, Tennessee',
+                  'bigbend': 'Shrubland: Big Bend, Texas'}
 
 # Info 
 obs_names = ['SMAP', 'VIC', 'NOAH', 'MOSAIC']

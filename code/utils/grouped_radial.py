@@ -13,7 +13,7 @@ import math
 import pandas as pd
 
 from utils.constants import location_names
-from utils.global_paths import project_code_path
+from utils.global_paths import project_code_path, project_data_path
 
 sns.set_style('whitegrid', {'axes_linewidth': 0, 'axes.edgecolor': 'white'})
 
@@ -119,10 +119,10 @@ def grouped_radial(SAresults_total, SAresults_2order, parameters, ax, radSc=2.0,
 
 def read_second_order(experiment, N, obs_name):
     # Read total and first order
-    df_total = pd.read_csv(f'/storage/group/pches/default/users/dcl5300/wbm_soilM_crop_uc_lafferty-etal-2024-tbd_DATA/WBM/SA/{experiment}_{obs_name}_{N}_noCC_res_total.csv').set_index(['metric', 'param'])
+    df_total = pd.read_csv(f'{project_data_path}/WBM/SA/{experiment}_{obs_name}_{N}_noCC_res_total.csv').set_index(['metric', 'param'])
 
     # Read second order and add full complement (easier for plotting)
-    df_2order = pd.read_csv(f'/storage/group/pches/default/users/dcl5300/wbm_soilM_crop_uc_lafferty-etal-2024-tbd_DATA/WBM/SA/{experiment}_{obs_name}_{N}_noCC_res_2order.csv').set_index(['param1', 'param2'])
+    df_2order = pd.read_csv(f'{project_data_path}/WBM/SA/{experiment}_{obs_name}_{N}_noCC_res_2order.csv').set_index(['param1', 'param2'])
     df_2order_swapped = pd.DataFrame(data = df_2order.values,
                                  index = [(y, x) for x, y in df_2order.index],
                                  columns = df_2order.columns)
