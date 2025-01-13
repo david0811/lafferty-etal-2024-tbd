@@ -6,7 +6,7 @@ import pandas as pd
 from SALib import ProblemSpec
 from utils.global_paths import project_data_path
 
-from src.water_balance_jax import (
+from water_balance_jax import (
     construct_Kpet_crop,
     construct_Kpet_gen,
     wbm_jax,
