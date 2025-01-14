@@ -9,6 +9,7 @@ location_names = {'mclean': 'Agricultural land: McLean County, Illinois',
 
 # Info 
 obs_names = ['SMAP', 'VIC', 'NOAH', 'MOSAIC']
+obs_names_plot = {'SMAP':'SMAP', 'VIC':'VIC', 'NOAH':'Noah', 'MOSAIC':'Mosaic'}
 obs_colors = {'SMAP':"#e7298a", 'VIC':"#d95f02", 'NOAH':"#7570b3", 'MOSAIC':"#1b9e77"}
 
 
