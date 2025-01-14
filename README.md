@@ -27,7 +27,7 @@ _your software reference here_
 ### Input data
 | Dataset | Link | DOI | Description |
 |---------|------|-----|-------------|
-| NLDAS-2 forcing inputs | [-](https://disc.gsfc.nasa.gov/datasets/NLDAS_FORA0125_H_002/summary) | [-](https://doi.org/10.5067/6J5LHHOHZHN4) | - |
+| NLDAS-2 forcing inputs | https://disc.gsfc.nasa.gov/datasets/NLDAS_FORA0125_H_002/summary | https://doi.org/10.5067/6J5LHHOHZHN4 | - |
 | NLDAS-2 model outputs | - | - | - | 
 | SMAP forcing inputs | - | - | - |
 | SMAP model outputs | - | - | - | 
