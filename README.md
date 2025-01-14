@@ -44,7 +44,7 @@ _Coming soon_
 | pyWBM | - | https://github.com/david0811/pyWBM | - |
 
 ## Reproduce my experiment
-Project dependencies are specified in `pyproject.toml`. You can clone this directory and install via pip by running `pip install -e .` from the root directory. You'll also need to download all of the input data sets and update the paths appropriately in `utils/global_paths.py`.
+Project dependencies are specified in `pyproject.toml`. You can clone this directory and install via pip by running `pip install -e .` from the root directory. You'll also need to download all of the input data sets and update the appropriate paths in `src/utils/global_paths.py`.
 
 The following scripts can then be used to reproduce the experiment:
 
