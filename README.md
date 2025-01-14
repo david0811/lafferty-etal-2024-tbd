@@ -28,7 +28,7 @@ _your software reference here_
 | Dataset | Link | DOI | Description |
 |---------|------|-----|-------------|
 | NLDAS-2 forcing inputs | https://disc.gsfc.nasa.gov/datasets/NLDAS_FORA0125_H_002/summary | https://doi.org/10.5067/6J5LHHOHZHN4 | - |
-| NLDAS-2 model outputs | - | - | - | 
+| NLDAS-2 model outputs | VIC: https://disc.gsfc.nasa.gov/datasets/NLDAS_VIC0125_H_002/summary) <br> Noah: https://disc.gsfc.nasa.gov/datasets/NLDAS_NOAH0125_H_002/summary) <br> Mosaic: https://disc.gsfc.nasa.gov/datasets/NLDAS_VIC0125_H_002/summary | - | - | 
 | SMAP forcing inputs | - | - | - |
 | SMAP model outputs | - | - | - | 
 | SMAP model outputs | - | - | - | 
