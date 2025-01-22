@@ -1,4 +1,4 @@
-# lafferty-etal-2025-tbd
+# lafferty-etal-2025-earthsfuture
 
 **Combined climate and hydrologic uncertainties shape projections of future soil moisture in the central and eastern United States**
 
