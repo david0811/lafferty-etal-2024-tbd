@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14720426.svg)](https://doi.org/10.5281/zenodo.14720426)
+
 # lafferty-etal-2025-earthsfuture
 
 **Combined climate and hydrologic uncertainties shape projections of future soil moisture in the central and eastern United States**
@@ -20,7 +22,7 @@ Climate change is altering the frequency and intensity of physical hazards world
 _Coming soon_
 
 ## Code reference
-_your software reference here_
+David Lafferty. (2025). david0811/lafferty-etal-2025-earthsfuture: Initial submission (v1.0). Zenodo. https://doi.org/10.5281/zenodo.14720426
 
 ## Data reference
 
