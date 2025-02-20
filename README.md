@@ -19,7 +19,7 @@
 Climate change is altering the frequency and intensity of physical hazards worldwide, magnifying the risks to critical systems such as agriculture and water resources. Designing adaptive measures to mitigate these risks requires accounting for diverse climate futures, but this is challenging due to the large uncertainties in modeling both future climate change and the associated sectoral impacts. Here, we address this challenge in a hydrologic context by examining the combined role of climate and hydrologic uncertainties in shaping projections of future soil moisture. We focus on the eastern United States given its importance in global maize and soybean production. By encoding a simple conceptual water balance model in a differentiable programming framework, we facilitate fast runtimes and an efficient calibration procedure that enable an improved uncertainty analysis. We characterize and analyze uncertainty in model parameters by calibrating against different target datasets, including satellite- and reanalysis-derived products such as SMAP and NLDAS-2, as well as using several loss functions. We then convolve the resulting parameter ensemble with a set of downscaled and bias-corrected climate projections to produce a large ensemble (2340 members) of daily soil moisture simulations at approximately 12.5 km resolution over the domain. For annual average soil moisture, we find that most ensemble members project drying trends across most of the region, although some simulate a wetting of soils throughout this century. Our ensemble shows an increase in the frequency and intensity of dry extremes while there is less agreement for changes to wet extremes. We conduct sensitivity analyses on a variety of soil moisture metrics to measure the relative influence of climate and hydrologic uncertainties across space and time. Both climate and hydrologic factors contribute non-negligible uncertainty to long-term trends, but hydrologic uncertainty is dominant for projecting changes in the extremes. Our results underscore the need to account for combined hydrologic and climate uncertainties when developing actionable hydroclimatic projections.
 
 ## Journal reference
-_Coming soon_
+Lafferty et al. (2025), Combined climate and hydrologic uncertainties shape projections of future soil moisture in the eastern United States, ESS Open Archive. https://doi.org/10.22541/essoar.173878030.00737104/v1
 
 ## Code reference
 David Lafferty. (2025). david0811/lafferty-etal-2025-earthsfuture: Initial submission (v1.0). Zenodo. https://doi.org/10.5281/zenodo.14720426
@@ -38,7 +38,7 @@ David Lafferty. (2025). david0811/lafferty-etal-2025-earthsfuture: Initial submi
 | UC Davis soil properties | https://casoilresource.lawr.ucdavis.edu/soil-properties/download.php | - | Accessed November 2023. We use `Sand`, `Silt`, `Clay` (percent by weight). | 
 
 ### Output data
-_Coming soon_
+Lafferty et al. (2025), pyWBM soil moisture projections over the eastern United States. https://doi.org/10.26208/38C5-8206
 
 ## Contributing modeling software
 | Model | Version | Repository Link | DOI |
